@@ -1,6 +1,11 @@
+import { Outlet } from 'react-router-dom';
+
 function Header() {
     return (
-        <h1>Header</h1>
+        <div>
+            <h1>Header</h1>
+            <Outlet />
+        </div>
     )
 }
 export default Header
