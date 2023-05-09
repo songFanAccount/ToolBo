@@ -1,4 +1,4 @@
-import { NavBarLink } from './Links';
+import { NavBarLink } from '../Links';
 
 function NavBar() {
     return (
