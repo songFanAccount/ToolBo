@@ -1,9 +1,3 @@
-export const tools = {
-    subjects: {
-        maths: mathsTools
-    }
-}
-
 export const mathsTools = {
     displayName: 'maths',
     tools: null,
@@ -19,5 +13,11 @@ export const mathsTools = {
                 subcategories: null
             }
         }
+    }
+}
+
+export const tools = {
+    subjects: {
+        maths: mathsTools
     }
 }
