@@ -1,6 +1,6 @@
-import { Outlet } from 'react-router-dom';
 import { Box, Typography } from '@mui/material';
 import NavBar from './NavBar';
+import { LogoLink } from '../Links';
 
 function Header() {
     const headerStyle = {
@@ -10,13 +10,14 @@ function Header() {
         border: 0,
         mt: 0,
         py: 0,
-        height: 75
+        height: 100
     }
     const titleStyle = {
         color: '#fdfffc',
         border: 0,
-        mt: 'auto',
-        mb: 'auto',
+        mt: 3.2,
+        mb: 0,
+        ml: 5,
         py: 0,
         fontFamily: 'Braah One',
         fontSize: 40,
@@ -26,10 +27,11 @@ function Header() {
     return (
         <>
             <Box sx={headerStyle}>
-                <Typography component="h1" sx={titleStyle}>ToolBox</Typography>
+                <Typography component="h1" sx={titleStyle}>
+                    <LogoLink href="/" text="ToolBox"/>
+                </Typography>
                 <NavBar />
             </Box>
-            <Outlet />
         </>
     )
 }

@@ -12,10 +12,29 @@ function LinkConstructor(props) {
         </Link>
     )
 }
-export function NavBarLink(props) {
-    console.log(props)
+export function LogoLink(props) {
     const sx = {
-        mx: 3
+        textDecoration: 'none',
+        color: 'inherit'
+    }
+    return (
+        <LinkConstructor 
+            href={props.href} 
+            text={props.text}
+            sx={sx}
+        />
+    )
+}
+export function NavBarLink(props) {
+    const sx = {
+        mx: 3.5,
+        fontSize: 20,
+        fontFamily: 'Gills Sans',
+        color: '#fdfffc',
+        textDecoration: 'none',
+        '&:hover': {
+            color: '#ced4da'
+        }
     }
     return (
         <LinkConstructor 
