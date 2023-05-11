@@ -20,13 +20,13 @@ function SideNavBar(props) {
 	const inHeader = props.inHeader
     const [open, setOpen] = React.useState(false)
     const [categories, setCategories] = React.useState([])
+	const [curCategory, setCurCategory] = React.useState(tools)
     const [path, setPath] = React.useState("")
 
     function toggleOn() {
         if(open) {return}
         console.log("Opening side nav bar")
         setOpen(true)
-        setCategories(["Categories", "Maths", "Integration", "Integration by parts"])
         setPath('/tools')
     }
 
@@ -118,6 +118,9 @@ function SideNavBar(props) {
             </Box>
         )
     }
+	const getCurCategory = () => (
+		categories.length > 0 ? curCategory.displayName : "Categories"
+	)
     const heading = () =>  (
 		<Box
 			sx={{
@@ -141,7 +144,7 @@ function SideNavBar(props) {
 					fontWeight: 'bold'
 				}}
 			>
-				{categories[categories.length - 1]}
+				{getCurCategory()}
 			</Typography>
 			<IconButton onClick={toggleOff}
 				sx={{
@@ -154,10 +157,45 @@ function SideNavBar(props) {
 			</IconButton>
 		</Box>
 	)
+	const getTools = () => (
+		categories.length > 0 && curCategory.tools 
+		?
+			curCategory.tools.map((tool) => (
+				<></>
+			))
+		:
+			<></>
+	)
+
+	const getSubcategories = () => {
+		if(categories.length === 0) {
+			if(!curCategory.subjects) {throw new Error("Tools' subjects is null???")}
+			return (
+				<List>
+					{
+						Object.values(curCategory.subjects).map((value) => (
+							<ListItem key={value.displayName}>{value.displayName}</ListItem>
+						))
+					}
+				</List>
+			)
+		}
+		curCategory.subCategories
+		?
+			<List>
+				Object.keys(curCategory.subCategories).forEach(function(key) {
+					console.log("hello")
+				})
+			</List>
+		:
+			<></>
+	}
     /*
     CONTENTS SHOULD HAVE
     - prevPath if path is longer than 1 i.e. just categories
     - heading that displays current category, and a button that goes to previous category (or close navbar if no previous)
+	- Available tools in current category
+	- Subcategories of current category
     */
     const contents = () => (
         <Box
@@ -169,6 +207,8 @@ function SideNavBar(props) {
         >
             {prevPath()}
             {heading()}
+			{getTools()}
+			{getSubcategories()}
         </Box>
     )
     return (

@@ -1,5 +1,6 @@
 export const mathsTools = {
-    displayName: 'maths',
+    displayName: 'Maths',
+    path: 'maths',
     tools: null,
     subCategories: {
         integration: {
@@ -10,7 +11,63 @@ export const mathsTools = {
                 displayName: 'MathCategory11',
                 path: 'mc11',
                 tools: ["Math C11 T1", "Math C11 T2"],
-                subcategories: null
+                subCategories: null
+            }
+        }
+    }
+}
+
+export const chemistryTools = {
+    displayName: 'Chemistry',
+    path: 'chemistry',
+    tools: null,
+    subCategories: {
+        integration: {
+            displayName: 'ChemCategory 1',
+            path: 'cc1',
+            tools: null,
+            subCategories:  {
+                displayName: 'ChemCategory11',
+                path: 'cc11',
+                tools: ["Chem C11 T1", "Chem C11 T2"],
+                subCategories: null
+            }
+        }
+    }
+}
+export const physicsTools = {
+    displayName: 'Physics',
+    path: 'physics',
+    tools: null,
+    subCategories: {
+        integration: {
+            displayName: 'PhysicsCategory 1',
+            path: 'pc1',
+            tools: null,
+            subCategories:  {
+                displayName: 'PhysicsCategory11',
+                path: 'pc11',
+                tools: ["Physics C11 T1", "Physics C11 T2"],
+                subCategories: null
+            }
+        }
+    }
+}
+
+export const engineeringTools = {
+    displayName: 'Engineering',
+    path: 'engineering',
+    tools: null,
+    subCategories: {
+        integration: {
+            displayName: 'EngineeringCategory 1',
+            path: 'ec1',
+            tools: null,
+            subCategories:  {
+                displayName: 'EngineeringCategory11',
+                path: 'ec11',
+                tools: ["Engineering C11 T1", "Engineering C11 T2"],
+                subCategories: null
             }
         }
     }
@@ -18,6 +75,9 @@ export const mathsTools = {
 
 export const tools = {
     subjects: {
-        maths: mathsTools
+        Maths: mathsTools,
+        Chemistry: chemistryTools,
+        Physics: physicsTools,
+        Engineering: engineeringTools
     }
 }
