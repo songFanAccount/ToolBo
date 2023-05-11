@@ -12,22 +12,9 @@ function LinkConstructor(props) {
         </Link>
     )
 }
-export function LogoLink(props) {
-    const sx = {
-        textDecoration: 'none',
-        color: 'inherit'
-    }
-    return (
-        <LinkConstructor 
-            href={props.href} 
-            text={props.text}
-            sx={sx}
-        />
-    )
-}
 export function NavBarLink(props) {
     const sx = {
-        mx: 3.5,
+        mx: 2,
         fontSize: 20,
         fontFamily: 'Gills Sans',
         color: '#fdfffc',

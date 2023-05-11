@@ -5,6 +5,7 @@ import Button from '@mui/material/Button';
 import { IconButton, Typography, SvgIcon } from '@mui/material';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import ConstructionSharpIcon from '@mui/icons-material/ConstructionSharp';
 import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
 import ListItem from '@mui/material/ListItem';
@@ -15,7 +16,8 @@ import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import { tools } from '../data';
 
-function SideNavBar() {
+function SideNavBar(props) {
+	const inHeader = props.inHeader
     const [open, setOpen] = React.useState(false)
     const [categories, setCategories] = React.useState([])
     const [path, setPath] = React.useState("")
@@ -35,7 +37,47 @@ function SideNavBar() {
         setCategories([])
         setPath('')
     }
-
+	const toolsIcon = () => {
+		const sx = {
+			fontSize: 40
+		}
+		if(inHeader) {
+			sx.color = '#fdfffc'
+			sx.my = 'auto'
+		}
+		return (
+			<ConstructionSharpIcon
+				aria-hidden='false'
+				aria-label='Tools Menu'
+				sx={sx}
+			/>
+		)
+	}
+	const toolsButton = () => (
+		<Button 
+			onClick={toggleOn}
+			role="navigation"
+			sx={{
+				color: 'black',
+				p: 0,
+				mt: inHeader ? 0 : 3,
+				ml: 3,
+			}}
+		>
+			{toolsIcon()}
+			{!inHeader && 
+				<Typography
+					sx={{
+						ml: .5,
+						fontSize: 20,
+						fontFamily: 'Montserrat'
+					}}
+				>
+					Tools
+				</Typography>
+			}
+		</Button>
+	)
     const prevArrow = () => (
         <SvgIcon
             sx={{
@@ -76,44 +118,42 @@ function SideNavBar() {
             </Box>
         )
     }
-    const heading = () =>  {
-        return (
-            <Box
-                sx={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    backgroundColor: 'transparent',
-                    minheight: 50,
-                    ml: 3,
-                    mt: .8
-                }}
-            >
-                <Typography
-                    sx={{
-                        mr: 0,
-                        p: 0,
-                        fontSize: 20,
-                        height: 'fit-content',
-                        width: 'fit-content',
-                        wordWrap: 'break-word',
-                        fontWeight: 'bold'
-                    }}
-                >
-                    {categories[categories.length - 1]}
-                </Typography>
-                <IconButton onClick={toggleOff}
-                    sx={{
-                        mr: 1.5,
-                        ml: 2,
-                        mt: .7
-                    }}
-                >
-                    <ArrowBackIosIcon />
-                </IconButton>
-            </Box>
-        )
-    }
+    const heading = () =>  (
+		<Box
+			sx={{
+				display: 'flex',
+				justifyContent: 'space-between',
+				alignItems: 'center',
+				backgroundColor: 'transparent',
+				minheight: 50,
+				ml: 3,
+				mt: .8
+			}}
+		>
+			<Typography
+				sx={{
+					mr: 0,
+					p: 0,
+					fontSize: 20,
+					height: 'fit-content',
+					width: 'fit-content',
+					wordWrap: 'break-word',
+					fontWeight: 'bold'
+				}}
+			>
+				{categories[categories.length - 1]}
+			</Typography>
+			<IconButton onClick={toggleOff}
+				sx={{
+					mr: 1.5,
+					ml: 2,
+					mt: .7
+				}}
+			>
+				<ArrowBackIosIcon />
+			</IconButton>
+		</Box>
+	)
     /*
     CONTENTS SHOULD HAVE
     - prevPath if path is longer than 1 i.e. just categories
@@ -132,19 +172,24 @@ function SideNavBar() {
         </Box>
     )
     return (
-            <div>
-                <Button onClick={toggleOn}>Tools</Button>
+        	<Box
+				sx={{
+					my: 'auto'
+				}}
+			>
+                {toolsButton()}
                 <Drawer
                     open={open}
                     onClose={toggleOff}
                 >
                     {contents()}
                 </Drawer>
-            </div>
+            </Box>
     )
 }
 export default SideNavBar
 
+/*
 function TemporaryDrawer() {
   const [state, setState] = React.useState({
     top: false,
@@ -213,3 +258,4 @@ function TemporaryDrawer() {
     </div>
   );
 }
+*/
