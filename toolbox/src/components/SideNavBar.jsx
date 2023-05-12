@@ -1,20 +1,13 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
-import Button from '@mui/material/Button';
-import { IconButton, Typography, SvgIcon, Divider } from '@mui/material';
+import React from 'react';
+import { Box, Drawer, Button, IconButton, Typography, SvgIcon, Divider, List } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ConstructionSharpIcon from '@mui/icons-material/ConstructionSharp';
 import CloseIcon from '@mui/icons-material/Close';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
 import { tools } from '../data';
 
 function SideNavBar(props) {
@@ -25,7 +18,6 @@ function SideNavBar(props) {
 	const [curCategory, setCurCategory] = React.useState(tools)
 	const [newPath, setNewPath] = React.useState("")
 	const location = useLocation()
-	console.log(location.pathname)
 
 	function processCurPath() {
 		const curPath = location.pathname
@@ -65,7 +57,7 @@ function SideNavBar(props) {
         setCategories([])
 		setNewPath("")
     }
-	const toolsIcon = () => {
+	const ToolsIcon = () => {
 		const sx = {
 			fontSize: 40
 		}
@@ -81,7 +73,7 @@ function SideNavBar(props) {
 			/>
 		)
 	}
-	const toolsButton = () => (
+	const ToolsButton = () => (
 		<Button 
 			onClick={toggleOn}
 			role="navigation"
@@ -92,7 +84,7 @@ function SideNavBar(props) {
 				ml: 3,
 			}}
 		>
-			{toolsIcon()}
+			<ToolsIcon/>
 			{!inHeader && 
 				<Typography
 					sx={{
@@ -106,7 +98,7 @@ function SideNavBar(props) {
 			}
 		</Button>
 	)
-    const prevArrow = () => (
+    const PrevArrow = () => (
         <SvgIcon
             sx={{
                 fontSize: 10,
@@ -117,7 +109,7 @@ function SideNavBar(props) {
             <ArrowForwardIosIcon/>
         </SvgIcon>
     )
-    const prevText = (text) => (
+    const PrevText = (text) => (
         <Typography
             sx={{
                 mx: 0.5,
@@ -128,7 +120,7 @@ function SideNavBar(props) {
             {text}
         </Typography>
     )
-    const prevPath = () => {
+    const PrevPath = () => {
         const len = categories.length
         return (
             <Box
@@ -140,16 +132,39 @@ function SideNavBar(props) {
                     width: "fit-content"
                 }}
             >
-                {len > 3 && (<>{prevText("...")}{prevArrow()}</>)}
-                {len >= 3 && (<>{prevText(namePath[len - 3])}{prevArrow()}</>)}
-                {len >= 2 && (<>{prevText(namePath[len - 2])}{prevArrow()}</>)}
+                {len > 3 && (<>{PrevText("...")}{<PrevArrow/>}</>)}
+                {len >= 3 && (<>{PrevText(namePath[len - 3])}{<PrevArrow/>}</>)}
+                {len >= 2 && (<>{PrevText(namePath[len - 2])}{<PrevArrow/>}</>)}
             </Box>
         )
     }
-	const getCurCategory = () => (
-		categories.length > 0 ? curCategory.displayName : "Categories"
+	const CurCategory = () => (
+		<Typography
+			sx={{
+				mr: 0,
+				p: 0,
+				fontSize: 20,
+				wordWrap: 'break-word',
+				fontFamily: 'Montserrat',
+				color: 'black',
+				fontWeight: 'bold'
+			}}
+		>
+			{categories.length > 0 ? curCategory.displayName : "Categories"}
+		</Typography>
 	)
-    const heading = () =>  (
+	const HeadingButton = () => (
+		<IconButton onClick={toggleOff}
+			sx={{
+				alignSelf: 'flex-end',
+				p: 2,
+				color: 'black'
+			}}
+		>
+			<CloseIcon />
+		</IconButton>
+	)
+    const Heading = () =>  (
 		<Box>
 			<Box
 				sx={{
@@ -164,45 +179,17 @@ function SideNavBar(props) {
 					mb: 2
 				}}
 			>
-				<Typography
-					sx={{
-						mr: 0,
-						p: 0,
-						fontSize: 20,
-						height: 'fit-content',
-						width: 'fit-content',
-						wordWrap: 'break-word',
-						fontFamily: 'Montserrat',
-						color: 'black',
-						fontWeight: 'bold'
-					}}
-				>
-					{getCurCategory()}
-				</Typography>
-				<IconButton onClick={toggleOff}
-					sx={{
-						alignSelf: 'flex-end',
-						p: 2,
-						color: 'black'
-					}}
-				>
-					<CloseIcon />
-				</IconButton>
+				<CurCategory/>
+				<HeadingButton/>
 			</Box>
 			<Divider/>
 		</Box>
 	)
-	// <categories.length > 0 && curCategory.tools 
-	// ?
-	// 	curCategory.tools.map((tool) => (
-	// 		<></>
-	// 	))
-	// :
-	// 	<></>>
-	const getTools = () => (
+	
+	const Tools = () => (
 		<></>
 	)
-	function ClickCategory(key, value) {
+	function clickCategory(key, value) {
 		console.log("Clicked " + key)
 		console.log(value)
 		setNewPath(`${newPath}/${key}`)
@@ -211,7 +198,7 @@ function SideNavBar(props) {
 		setCategories((prevCategories) => [...prevCategories, key])
 		setNamePath((prevNamePath) => [...prevNamePath, value.displayName])
 	}
-	const getSubcategories = () => (
+	const SubCategories = () => (
 		<List
 			sx={{
 				py: 2
@@ -220,7 +207,7 @@ function SideNavBar(props) {
 			{
 				Object.entries(curCategory.subCategories).map((entry) => (
 					<ListItemButton
-						onClick={() => ClickCategory(entry[0], entry[1])}
+						onClick={() => clickCategory(entry[0], entry[1])}
 						key={entry[0]}
 						sx={{
 							display: 'flex',
@@ -228,45 +215,39 @@ function SideNavBar(props) {
 							px: 0,
 						}}
 					>
-						<Typography
+						<ListItemText
 							sx={{
 								ml: 3,
 								color: '#343a40',
 								fontFamily: 'Montserrat',
 							}}
-						>{entry[1].displayName}</Typography>
-						<ArrowForwardIosIcon
-							sx={{
-								fontSize: 16,
-								alignSelf: 'flex-start',
-								mr: 3,
-								p: 1,
-								color: '#495057'
-							}}
-						/>
+						>
+							{entry[1].displayName}
+						</ListItemText>
+						<ListItemIcon>
+							<ArrowForwardIosIcon
+								sx={{
+									fontSize: 16,
+									alignSelf: 'flex-start',
+									mr: 3,
+									p: 1,
+									color: '#495057'
+								}}
+							/>
+						</ListItemIcon>
 					</ListItemButton>
 				))
 			}
 		</List>
-
-		// curCategory.subCategories
-		// ?
-		// 	<List>
-		// 		Object.keys(curCategory.subCategories).forEach(function(key) {
-		// 			console.log("hello")
-		// 		})
-		// 	</List>
-		// :
-		// 	<></>
 	)
     /*
-    CONTENTS SHOULD HAVE
-    - prevPath if path is longer than 1 i.e. just categories
-    - heading that displays current category, and a button that goes to previous category (or close navbar if no previous)
+    Contents SHOULD HAVE
+    - PrevPath if path is longer than 1 i.e. just categories
+    - Heading that displays current category, and a button that goes to previous category (or close navbar if no previous)
 	- Available tools in current category
 	- Subcategories of current category
     */
-    const contents = () => (
+    const Contents = () => (
 		<Box
 			sx={{
 				display: 'flex',
@@ -274,10 +255,10 @@ function SideNavBar(props) {
 				width: 300
 			}}
 		>
-			{prevPath()}
-			{heading()}
-			{getTools()}
-			{curCategory.subCategories && getSubcategories()}
+			<PrevPath/>
+			<Heading/>
+			<Tools/>
+			{curCategory.subCategories && <SubCategories/>}
 		</Box>
     )
     return (
@@ -286,85 +267,14 @@ function SideNavBar(props) {
 					my: 'auto'
 				}}
 			>
-                {toolsButton()}
+                <ToolsButton/>
                 <Drawer
                     open={open}
                     onClose={toggleOff}
                 >
-                    {open && contents()}
+                    <Contents/>
                 </Drawer>
             </Box>
     )
 }
 export default SideNavBar
-
-/*
-function TemporaryDrawer() {
-  const [state, setState] = React.useState({
-    top: false,
-    left: false,
-    bottom: false,
-    right: false,
-  });
-
-  const toggleDrawer = (anchor, open) => (event) => {
-    if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
-      return;
-    }
-
-    setState({ ...state, [anchor]: open });
-  };
-
-  const list = (anchor) => (
-    <Box
-      sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 250 }}
-      role="presentation"
-      onClick={toggleDrawer(anchor, false)}
-      onKeyDown={toggleDrawer(anchor, false)}
-    >
-      <List>
-        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-      <Divider />
-      <List>
-        {['All mail', 'Trash', 'Spam'].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-    </Box>
-  );
-
-  return (
-    <div>
-      {['left', 'right', 'top', 'bottom'].map((anchor) => (
-        <React.Fragment key={anchor}>
-          <Button onClick={toggleDrawer(anchor, true)}>{anchor}</Button>
-          <Drawer
-            anchor={anchor}
-            open={state[anchor]}
-            onClose={toggleDrawer(anchor, false)}
-          >
-            {list(anchor)}
-          </Drawer>
-        </React.Fragment>
-      ))}
-    </div>
-  );
-}
-*/

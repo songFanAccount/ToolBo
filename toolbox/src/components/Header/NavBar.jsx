@@ -10,7 +10,7 @@ function NavBar(props) {
         mr: 2.5,
         //backgroundColor: 'red'
     }
-    const contents = () => {
+    const Contents = () => {
         switch (dimX) {
             case 0:
                 return (
@@ -36,7 +36,7 @@ function NavBar(props) {
     }
     return (
         <Box sx={barStyle}>
-            {contents()}
+            <Contents/>
         </Box>
     )
 }
