@@ -2,12 +2,13 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import Button from '@mui/material/Button';
-import { IconButton, Typography, SvgIcon } from '@mui/material';
+import { IconButton, Typography, SvgIcon, Divider } from '@mui/material';
+import { useLocation } from 'react-router-dom';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ConstructionSharpIcon from '@mui/icons-material/ConstructionSharp';
+import CloseIcon from '@mui/icons-material/Close';
 import List from '@mui/material/List';
-import Divider from '@mui/material/Divider';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -19,15 +20,42 @@ import { tools } from '../data';
 function SideNavBar(props) {
 	const inHeader = props.inHeader
     const [open, setOpen] = React.useState(false)
+	const [namePath, setNamePath] = React.useState([])
     const [categories, setCategories] = React.useState([])
 	const [curCategory, setCurCategory] = React.useState(tools)
-    const [path, setPath] = React.useState("")
+	const [newPath, setNewPath] = React.useState("")
+	const location = useLocation()
+	console.log(location.pathname)
 
+	function processCurPath() {
+		const curPath = location.pathname
+		if(curPath.startsWith('/tools')) {
+			setNewPath(curPath)
+			const routes = "/tools/maths/integration".split("/")
+			console.log(routes)
+			let cat = tools
+			let cats = []
+			let names = ['Categories']
+			for(let i = 2; i < routes.length; i++) {
+				cat = cat[routes[i]]
+				cats.push(routes[i])
+				names.push(cat.displayName)
+			}
+			setCurCategory(cat)
+			setCategories(cats)
+			setNamePath(names)
+		} else {
+			setNewPath('/tools')
+			setCurCategory(tools)
+			setCategories([])
+			setNamePath(['Categories'])
+		}
+	}
     function toggleOn() {
         if(open) {return}
         console.log("Opening side nav bar")
         setOpen(true)
-        setPath('/tools')
+		processCurPath()
     }
 
     function toggleOff() {
@@ -35,7 +63,7 @@ function SideNavBar(props) {
         console.log("Closing side nav bar")
         setOpen(false)
         setCategories([])
-        setPath('')
+		setNewPath("")
     }
 	const toolsIcon = () => {
 		const sx = {
@@ -113,8 +141,8 @@ function SideNavBar(props) {
                 }}
             >
                 {len > 3 && (<>{prevText("...")}{prevArrow()}</>)}
-                {len >= 3 && (<>{prevText(categories[len - 3])}{prevArrow()}</>)}
-                {len >= 2 && (<>{prevText(categories[len - 2])}{prevArrow()}</>)}
+                {len >= 3 && (<>{prevText(namePath[len - 3])}{prevArrow()}</>)}
+                {len >= 2 && (<>{prevText(namePath[len - 2])}{prevArrow()}</>)}
             </Box>
         )
     }
@@ -122,74 +150,115 @@ function SideNavBar(props) {
 		categories.length > 0 ? curCategory.displayName : "Categories"
 	)
     const heading = () =>  (
-		<Box
-			sx={{
-				display: 'flex',
-				justifyContent: 'space-between',
-				alignItems: 'center',
-				backgroundColor: 'transparent',
-				minheight: 50,
-				ml: 3,
-				mt: .8
-			}}
-		>
-			<Typography
+		<Box>
+			<Box
 				sx={{
-					mr: 0,
-					p: 0,
-					fontSize: 20,
-					height: 'fit-content',
-					width: 'fit-content',
-					wordWrap: 'break-word',
-					fontWeight: 'bold'
+					display: 'flex',
+					justifyContent: 'space-between',
+					alignItems: 'center',
+					backgroundColor: 'transparent',
+					minheight: 50,
+					ml: 3,
+					mr: 2,
+					mt: .8,
+					mb: 2
 				}}
 			>
-				{getCurCategory()}
-			</Typography>
-			<IconButton onClick={toggleOff}
-				sx={{
-					mr: 1.5,
-					ml: 2,
-					mt: .7
-				}}
-			>
-				<ArrowBackIosIcon />
-			</IconButton>
+				<Typography
+					sx={{
+						mr: 0,
+						p: 0,
+						fontSize: 20,
+						height: 'fit-content',
+						width: 'fit-content',
+						wordWrap: 'break-word',
+						fontFamily: 'Montserrat',
+						color: 'black',
+						fontWeight: 'bold'
+					}}
+				>
+					{getCurCategory()}
+				</Typography>
+				<IconButton onClick={toggleOff}
+					sx={{
+						alignSelf: 'flex-end',
+						p: 2,
+						color: 'black'
+					}}
+				>
+					<CloseIcon />
+				</IconButton>
+			</Box>
+			<Divider/>
 		</Box>
 	)
+	// <categories.length > 0 && curCategory.tools 
+	// ?
+	// 	curCategory.tools.map((tool) => (
+	// 		<></>
+	// 	))
+	// :
+	// 	<></>>
 	const getTools = () => (
-		categories.length > 0 && curCategory.tools 
-		?
-			curCategory.tools.map((tool) => (
-				<></>
-			))
-		:
-			<></>
+		<></>
 	)
-
-	const getSubcategories = () => {
-		if(categories.length === 0) {
-			if(!curCategory.subjects) {throw new Error("Tools' subjects is null???")}
-			return (
-				<List>
-					{
-						Object.values(curCategory.subjects).map((value) => (
-							<ListItem key={value.displayName}>{value.displayName}</ListItem>
-						))
-					}
-				</List>
-			)
-		}
-		curCategory.subCategories
-		?
-			<List>
-				Object.keys(curCategory.subCategories).forEach(function(key) {
-					console.log("hello")
-				})
-			</List>
-		:
-			<></>
+	function ClickCategory(key, value) {
+		console.log("Clicked " + key)
+		console.log(value)
+		setNewPath(`${newPath}/${key}`)
+		const newCat = curCategory.subCategories[key]
+		setCurCategory(newCat)
+		setCategories((prevCategories) => [...prevCategories, key])
+		setNamePath((prevNamePath) => [...prevNamePath, value.displayName])
 	}
+	const getSubcategories = () => (
+		<List
+			sx={{
+				py: 2
+			}}
+		>
+			{
+				Object.entries(curCategory.subCategories).map((entry) => (
+					<ListItemButton
+						onClick={() => ClickCategory(entry[0], entry[1])}
+						key={entry[0]}
+						sx={{
+							display: 'flex',
+							justifyContent: 'space-between',
+							px: 0,
+						}}
+					>
+						<Typography
+							sx={{
+								ml: 3,
+								color: '#343a40',
+								fontFamily: 'Montserrat',
+							}}
+						>{entry[1].displayName}</Typography>
+						<ArrowForwardIosIcon
+							sx={{
+								fontSize: 16,
+								alignSelf: 'flex-start',
+								mr: 3,
+								p: 1,
+								color: '#495057'
+							}}
+						/>
+					</ListItemButton>
+				))
+			}
+		</List>
+
+		// curCategory.subCategories
+		// ?
+		// 	<List>
+		// 		Object.keys(curCategory.subCategories).forEach(function(key) {
+		// 			console.log("hello")
+		// 		})
+		// 	</List>
+		// :
+		// 	<></>
+	)
     /*
     CONTENTS SHOULD HAVE
     - prevPath if path is longer than 1 i.e. just categories
@@ -198,18 +267,18 @@ function SideNavBar(props) {
 	- Subcategories of current category
     */
     const contents = () => (
-        <Box
-            sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                width: 300
-            }}
-        >
-            {prevPath()}
-            {heading()}
+		<Box
+			sx={{
+				display: 'flex',
+				flexDirection: 'column',
+				width: 300
+			}}
+		>
+			{prevPath()}
+			{heading()}
 			{getTools()}
-			{getSubcategories()}
-        </Box>
+			{curCategory.subCategories && getSubcategories()}
+		</Box>
     )
     return (
         	<Box
@@ -222,7 +291,7 @@ function SideNavBar(props) {
                     open={open}
                     onClose={toggleOff}
                 >
-                    {contents()}
+                    {open && contents()}
                 </Drawer>
             </Box>
     )
