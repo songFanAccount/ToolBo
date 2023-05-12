@@ -103,7 +103,8 @@ function SideNavBar(props) {
 				mr: 0,
 				p: 0,
 				fontSize: 20,
-				wordWrap: 'break-word',
+				maxWidth: 200,
+				whiteSpace: 'normal',
 				fontFamily: 'Montserrat',
 				color: 'black',
 				fontWeight: 'bold'
@@ -112,17 +113,40 @@ function SideNavBar(props) {
 			{categories.length > 0 ? curCategory.displayName : "Categories"}
 		</Typography>
 	)
-	const HeadingButton = () => (
-		<IconButton onClick={toggleOff}
-			sx={{
-				alignSelf: 'flex-end',
-				p: 2,
-				color: 'black'
-			}}
-		>
-			<CloseIcon />
-		</IconButton>
-	)
+
+	function toPrevCategory() {
+		setNamePath(namePath.slice(0, -1))
+		console.log(namePath)
+		setCategories(categories.slice(0, -1))
+		console.log(categories)
+		let paths = newPath.split('/')
+		paths.pop()
+		console.log(paths)
+		setNewPath(paths.join('/'))
+		console.log(newPath)
+		let newCat = tools
+		for(let i = 2; i < paths.length; i++) {
+			newCat = newCat.subCategories[paths[i]]
+		}
+		setCurCategory(newCat)
+		console.log(curCategory)
+	}
+	const HeadingButton = () => {
+		const isBack = categories.length > 0
+		return (
+			<IconButton onClick={isBack ? toPrevCategory : toggleOff}
+				sx={{
+					alignSelf: 'flex-end',
+					py: 2,
+					pl: isBack ? 3 : 2,
+					pr: isBack ? 1 : 2,
+					color: 'black'
+				}}
+			>
+				{isBack ? <ArrowBackIosIcon/> : <CloseIcon />}
+			</IconButton>
+		)
+	}
     const Heading = () =>  (
 		<Box>
 			<Box
@@ -244,6 +268,7 @@ function SideNavBar(props) {
 			sx={{
 				color: 'black',
 				p: 1,
+				mt: inHeader ? 0 : 3
 			}}
 		>
 			<ToolsIcon/>

@@ -6,7 +6,7 @@ function Home() {
     }
     return (
         <Box sx={boxStyle}> 
-            Home page
+            <h1>Home Page</h1>
         </Box>
     )
 }
