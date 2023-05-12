@@ -10,11 +10,17 @@ function NavBar(props) {
         mr: 2.5,
         //backgroundColor: 'red'
     }
+
+    function openMenu() {
+        console.log("open menu")
+    }
     const Contents = () => {
         switch (dimX) {
             case 0:
                 return (
-                    <IconButton>
+                    <IconButton
+                        onClick={openMenu}
+                    >
                         <MenuIcon
                             sx={{
                                 fontSize: 40,

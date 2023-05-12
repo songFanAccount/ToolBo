@@ -15,8 +15,8 @@ function LinkConstructor(props) {
 export function NavBarLink(props) {
     const sx = {
         mx: 2,
-        fontSize: 20,
-        fontFamily: 'Gills Sans',
+        fontSize: 16,
+        fontFamily: 'Montserrat',
         color: '#fdfffc',
         textDecoration: 'none',
         '&:hover': {

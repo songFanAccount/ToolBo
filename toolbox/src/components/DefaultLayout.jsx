@@ -11,7 +11,7 @@ function DefaultLayout() {
     1 -> ipad/desktop?
     */
     let dimX = 0
-    if(useMediaQuery('(min-width:600px)')) {
+    if(useMediaQuery('(min-width:900px)')) {
         dimX = 1
     }
     // MAYBE TODO: Add new dimX = 2 for min-width:900px

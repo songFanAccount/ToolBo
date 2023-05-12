@@ -57,47 +57,6 @@ function SideNavBar(props) {
         setCategories([])
 		setNewPath("")
     }
-	const ToolsIcon = () => {
-		const sx = {
-			fontSize: 40
-		}
-		if(inHeader) {
-			sx.color = '#fdfffc'
-			sx.my = 'auto'
-		}
-		return (
-			<ConstructionSharpIcon
-				aria-hidden='false'
-				aria-label='Tools Menu'
-				sx={sx}
-			/>
-		)
-	}
-	const ToolsButton = () => (
-		<Button 
-			onClick={toggleOn}
-			role="navigation"
-			sx={{
-				color: 'black',
-				p: 0,
-				mt: inHeader ? 0 : 3,
-				ml: 3,
-			}}
-		>
-			<ToolsIcon/>
-			{!inHeader && 
-				<Typography
-					sx={{
-						ml: .5,
-						fontSize: 20,
-						fontFamily: 'Montserrat'
-					}}
-				>
-					Tools
-				</Typography>
-			}
-		</Button>
-	)
     const PrevArrow = () => (
         <SvgIcon
             sx={{
@@ -261,13 +220,59 @@ function SideNavBar(props) {
 			{curCategory.subCategories && <SubCategories/>}
 		</Box>
     )
+	const ToolsIcon = () => {
+		const sx = {
+			fontSize: 40,
+			m: 0,
+			p: 0
+		}
+		if(inHeader) {
+			sx.color = '#fdfffc'
+		}
+		return (
+			<ConstructionSharpIcon
+				aria-hidden='false'
+				aria-label='Tools Menu'
+				sx={sx}
+			/>
+		)
+	}
+	const ToolsButton = () => (
+		<IconButton 
+			onClick={toggleOn}
+			role="navigation"
+			sx={{
+				color: 'black',
+				p: 1,
+			}}
+		>
+			<ToolsIcon/>
+			{!inHeader && 
+				<Typography
+					sx={{
+						ml: .5,
+						fontSize: 20,
+						fontFamily: 'Montserrat'
+					}}
+				>
+					Tools
+				</Typography>
+			}
+		</IconButton>
+	)
     return (
         	<Box
 				sx={{
 					my: 'auto'
 				}}
 			>
-                <ToolsButton/>
+				<Box 
+					sx={{
+						ml: 2.5
+					}}
+				>
+					<ToolsButton/>
+				</Box>
                 <Drawer
                     open={open}
                     onClose={toggleOff}

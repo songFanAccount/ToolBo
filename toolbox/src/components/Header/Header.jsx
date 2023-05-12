@@ -16,19 +16,14 @@ function Header(props) {
     }
     let titleStyle = {
         color: '#fdfffc',
-        ml: 5,
-        mt: 1.5,
-        py: 0,
+        pt: 2,
+        px: 2,
         fontFamily: 'Braah One',
         fontSize: 40,
         fontWeight: 'bold'
     }
     switch(dimX) {
         case 0: // Case for small vw
-            titleStyle = {
-                ...titleStyle,
-                ml: 0
-            }
             break
         case 1:
             break
@@ -45,7 +40,7 @@ function Header(props) {
                 sx={{
                     textDecoration: 'none',
                     my: 'auto',
-                    p: 1
+                    ml: dimX === 0 ? 0 : 5,
                 }}
             >
                 <Typography component="h1" sx={titleStyle}>
