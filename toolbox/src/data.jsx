@@ -7,11 +7,18 @@ export const mathsTools = {
             tools: null,
             subCategories:  {
                 estimation: {
-                    displayName: 'Estimation techniques asdasdsadads',
+                    displayName: 'Estimation techniques',
                     tools: {
-                        'trapezoidal-rule': 'Trapezoidal rule'
+                        'trapezoidal-rule': 'Trapezoidal rule',
+                        'trapezoidal-rule1': "Simpson's rule"
                     },
-                    subCategories: null
+                    subCategories: {
+                        TEMPORARY: {
+                            displayName: 'Temporary',
+                            tools: null,
+                            subCategories: null
+                        }
+                    }
                 }
             }
         }

@@ -1,13 +1,13 @@
 import React from 'react';
-import { Box, Drawer, IconButton, Typography, SvgIcon, Divider, List } from '@mui/material';
+import { Box, Drawer, IconButton, Typography, SvgIcon, Divider, List, ListItemButton, ListItemIcon, ListItemText, Slider } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ConstructionSharpIcon from '@mui/icons-material/ConstructionSharp';
+import SubdirectoryArrowRightIcon from '@mui/icons-material/SubdirectoryArrowRight';
+import RemoveIcon from '@mui/icons-material/Remove';
 import CloseIcon from '@mui/icons-material/Close';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
+import CallMadeIcon from '@mui/icons-material/CallMade';
 import { tools } from '../data';
 
 function SideNavBar(props) {
@@ -19,6 +19,29 @@ function SideNavBar(props) {
 	const [newPath, setNewPath] = React.useState("")
 	const location = useLocation()
 
+	const sectionTitleStyle = {
+		mt: 3,
+		ml: 3,
+		p: 0,
+		color: '#011627',
+		fontSize: 24,
+		fontFamily: 'Montserrat'
+	}
+	const listItemStyle = {
+		display: 'flex',
+		py: 1,
+		px: 0,
+		'&:hover > .go': {
+			visibility: 'visible'
+		}
+	}
+	const listItemTextStyle = {
+		my: 0,
+		p: 0,
+		color: '#343a40',
+		fontSize: 14,
+		fontFamily: 'Montserrat',
+	}
 	function processCurPath() {
 		const curPath = location.pathname
 		if(curPath.startsWith('/tools')) {
@@ -175,8 +198,7 @@ function SideNavBar(props) {
 					minheight: 50,
 					ml: 3,
 					mr: 2,
-					mt: .8,
-					mb: 2
+					mt: .8
 				}}
 			>
 				<CurCategory/>
@@ -187,21 +209,69 @@ function SideNavBar(props) {
 	)
 	
 	const Tools = () => (
-		<List
-			sx={{
-
-			}}
-		>
-			{
-				Object.entries(curCategory.tools).map((entry) => (
-					<ListItemButton>
-						<ListItemText>
-							{entry[1]}
-						</ListItemText>
-					</ListItemButton>
-				))
-			}
-		</List>
+		<>
+			<Box
+				sx={{
+					minHeight: 220
+				}}
+			>
+				<Typography
+					sx={sectionTitleStyle}
+				>
+					Tools
+				</Typography>
+				<List
+					sx={{
+						pt: 1,
+						pb: 0
+					}}
+				>
+					{
+						Object.entries(curCategory.tools).map((entry) => (
+							<ListItemButton
+								sx={listItemStyle}
+							>
+								<RemoveIcon
+									sx={{
+										ml: 4, mr: 1, p: 0,
+										fontSize: 14,
+										color: 'black',
+										maxWidth: '10%',
+									}}
+								/>
+								<ListItemText
+									primary=
+									{
+										<Typography
+											sx={listItemTextStyle}
+										>
+											{entry[1]}
+										</Typography>
+									}
+								/>
+								<ListItemIcon
+									className="go"
+									sx={{
+										visibility: 'hidden'
+									}}
+								>
+									<CallMadeIcon
+										sx={{
+											fontSize: 20,
+											alignSelf: 'flex-start',
+											mr: 3,
+											ml: .8,
+											color: '#495057',
+										}}
+									/>
+								</ListItemIcon>
+							</ListItemButton>
+						))
+					}
+				</List>	
+			</Box>	
+			<Divider sx={{mt: 2}}/>
+		</>
 	)
 	function clickCategory(key, value) {
 		console.log("Clicked " + key)
@@ -214,67 +284,119 @@ function SideNavBar(props) {
 		console.log(namePath)
 	}
 	const SubCategories = () => (
-		<List
-			sx={{
-				py: 2
-			}}
-		>
-			{
-				Object.entries(curCategory.subCategories).map((entry) => (
-					<ListItemButton
-						onClick={() => clickCategory(entry[0], entry[1])}
-						key={entry[0]}
-						sx={{
-							display: 'flex',
-							justifyContent: 'space-between',
-							px: 0,
-						}}
-					>
-						<ListItemText
-							sx={{
-								ml: 3,
-								color: '#343a40',
-								fontFamily: 'Montserrat',
-							}}
+		<Box>
+			{categories.length > 0 && <Typography sx={sectionTitleStyle}> Sub-categories </Typography>}
+			<List
+				sx={{
+					pt: 1,
+					pb: 0
+				}}
+			>
+				{
+					Object.entries(curCategory.subCategories).map((entry) => (
+						<ListItemButton
+							onClick={() => clickCategory(entry[0], entry[1])}
+							key={entry[0]}
+							sx={listItemStyle}
 						>
-							{entry[1].displayName}
-						</ListItemText>
-						<ListItemIcon>
-							<ArrowForwardIosIcon
+							<SubdirectoryArrowRightIcon
 								sx={{
+									ml: 4, mr: 1, mb: .8, p: 0,
 									fontSize: 16,
-									alignSelf: 'flex-start',
-									mr: 3,
-									p: 1,
-									color: '#495057'
+									color: 'black',
+									width: 'fit-content',
 								}}
 							/>
-						</ListItemIcon>
-					</ListItemButton>
-				))
-			}
-		</List>
+							<ListItemText
+								primary=
+								{
+									<Typography
+										sx={{...listItemTextStyle, ml: 0}}
+									>
+										{entry[1].displayName}
+									</Typography>
+								}
+							/>
+							<ListItemIcon 
+								className="go"
+								sx={{
+									visibility: 'hidden'
+								}}
+							>
+								<ArrowForwardIosIcon
+									sx={{
+										fontSize: 16,
+										alignSelf: 'flex-start',
+										mr: 3,
+										ml: 1,
+										color: '#495057'
+									}}
+								/>
+							</ListItemIcon>
+						</ListItemButton>
+					))
+				}
+			</List>
+		</Box>
 	)
+	const SideBarFooter = () => {
+		return (
+			<Box
+				sx={{
+					mt: 'auto',
+					mb: 0,
+					borderTop: 1,
+					height: 75,
+					width: 1,
+					display: 'flex',
+					justifyContent: 'space-evenly',
+					alignItems: 'center'
+				}}
+			>
+					<Typography
+						sx={{
+							display: 'inline'
+						}}
+					>
+						Footer
+					</Typography>
+					<Typography
+						sx={{
+							display: 'inline'
+						}}
+					>
+						Footer 2
+					</Typography>
+			</Box>
+		)
+	}
     /*
     Contents SHOULD HAVE
     - PrevPath if path is longer than 1 i.e. just categories
     - Heading that displays current category, and a button that goes to previous category (or close navbar if no previous)
 	- Available tools in current category
 	- Subcategories of current category
+	- Footer that sends user to the current category page
     */
     const Contents = () => (
-		<Box
-			sx={{
-				display: 'flex',
-				flexDirection: 'column',
-				width: 350
-			}}
-		>
-			<PrevPath/>
-			<Heading/>
-			{curCategory.tools && <Tools/>}
-			{curCategory.subCategories && <SubCategories/>}
-		</Box>
+		<>
+			<Box
+				sx={{
+					display: 'flex',
+					flexDirection: 'column',
+					width: 350
+				}}
+			>
+				<Box sx={{minHeight: 100}}>
+					<PrevPath/>
+					<Heading/>
+				</Box>	
+				{curCategory.tools && <Tools/>}
+				{curCategory.subCategories && <SubCategories/>}
+				
+			</Box>
+			<SideBarFooter/>
+		</>
     )
 	const ToolsIcon = () => {
 		const sx = {
