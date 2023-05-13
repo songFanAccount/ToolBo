@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Drawer, Button, IconButton, Typography, SvgIcon, Divider, List } from '@mui/material';
+import { Box, Drawer, IconButton, Typography, SvgIcon, Divider, List } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
@@ -56,6 +56,7 @@ function SideNavBar(props) {
         setOpen(false)
         setCategories([])
 		setNewPath("")
+		setNamePath([])
     }
     const PrevArrow = () => (
         <SvgIcon
@@ -80,20 +81,30 @@ function SideNavBar(props) {
         </Typography>
     )
     const PrevPath = () => {
-        const len = categories.length
+        const len = namePath.length
         return (
             <Box
                 sx={{
-                    display: "flex",
-                    alignItems: 'center',
-                    mt: 5,
-                    ml: 3,
-                    width: "fit-content"
+					display: 'flex',
+					alignItems: 'flex-end',
+                    width: "100%",
+					height: 55,
+					maxHeight: 55
                 }}
             >
-                {len > 3 && (<>{PrevText("...")}{<PrevArrow/>}</>)}
-                {len >= 3 && (<>{PrevText(namePath[len - 3])}{<PrevArrow/>}</>)}
-                {len >= 2 && (<>{PrevText(namePath[len - 2])}{<PrevArrow/>}</>)}
+				<Box
+					sx={{
+						display: "flex",
+						alignItems: 'center',
+						ml: 3,
+						maxWidth: "100%",
+						maxHeight: "100%"
+					}}
+				>
+					{len > 3 && (<>{PrevText("...")}{<PrevArrow/>}</>)}
+					{len >= 3 && (<>{PrevText(namePath[len - 3])}{<PrevArrow/>}</>)}
+					{len >= 2 && (<>{PrevText(namePath[len - 2])}{<PrevArrow/>}</>)}
+				</Box>
             </Box>
         )
     }
@@ -103,7 +114,7 @@ function SideNavBar(props) {
 				mr: 0,
 				p: 0,
 				fontSize: 20,
-				maxWidth: 200,
+				width: '80%',
 				whiteSpace: 'normal',
 				fontFamily: 'Montserrat',
 				color: 'black',
@@ -134,17 +145,24 @@ function SideNavBar(props) {
 	const HeadingButton = () => {
 		const isBack = categories.length > 0
 		return (
-			<IconButton onClick={isBack ? toPrevCategory : toggleOff}
+			<Box
 				sx={{
-					alignSelf: 'flex-end',
-					py: 2,
-					pl: isBack ? 3 : 2,
-					pr: isBack ? 1 : 2,
-					color: 'black'
+					width: '20%',
 				}}
 			>
-				{isBack ? <ArrowBackIosIcon/> : <CloseIcon />}
-			</IconButton>
+				<IconButton onClick={isBack ? toPrevCategory : toggleOff}
+					sx={{
+						alignSelf: 'flex-end',
+						py: 2,
+						pl: isBack ? 3 : 2,
+						pr: isBack ? 1 : 2,
+						ml: 1,
+						color: 'black'
+					}}
+				>
+					{isBack ? <ArrowBackIosIcon sx={{fontSize: 24}}/> : <CloseIcon sx={{fontSize: 26}}/>}
+				</IconButton>
+			</Box>
 		)
 	}
     const Heading = () =>  (
@@ -152,7 +170,6 @@ function SideNavBar(props) {
 			<Box
 				sx={{
 					display: 'flex',
-					justifyContent: 'space-between',
 					alignItems: 'center',
 					backgroundColor: 'transparent',
 					minheight: 50,
@@ -170,7 +187,21 @@ function SideNavBar(props) {
 	)
 	
 	const Tools = () => (
-		<></>
+		<List
+			sx={{
+
+			}}
+		>
+			{
+				Object.entries(curCategory.tools).map((entry) => (
+					<ListItemButton>
+						<ListItemText>
+							{entry[1]}
+						</ListItemText>
+					</ListItemButton>
+				))
+			}
+		</List>
 	)
 	function clickCategory(key, value) {
 		console.log("Clicked " + key)
@@ -180,6 +211,7 @@ function SideNavBar(props) {
 		setCurCategory(newCat)
 		setCategories((prevCategories) => [...prevCategories, key])
 		setNamePath((prevNamePath) => [...prevNamePath, value.displayName])
+		console.log(namePath)
 	}
 	const SubCategories = () => (
 		<List
@@ -235,12 +267,12 @@ function SideNavBar(props) {
 			sx={{
 				display: 'flex',
 				flexDirection: 'column',
-				width: 300
+				width: 350
 			}}
 		>
 			<PrevPath/>
 			<Heading/>
-			<Tools/>
+			{curCategory.tools && <Tools/>}
 			{curCategory.subCategories && <SubCategories/>}
 		</Box>
     )
@@ -268,7 +300,8 @@ function SideNavBar(props) {
 			sx={{
 				color: 'black',
 				p: 1,
-				mt: inHeader ? 0 : 3
+				mt: inHeader ? 0 : 3,
+				borderRadius: 0
 			}}
 		>
 			<ToolsIcon/>

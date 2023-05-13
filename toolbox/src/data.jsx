@@ -3,12 +3,14 @@ export const mathsTools = {
     tools: null,
     subCategories: {
         integration: {
-            displayName: 'Math Category 1',
+            displayName: 'Integration',
             tools: null,
             subCategories:  {
-                TEMPORARY: {
-                    displayName: 'Math Category 11',
-                    tools: ["Math C11 T1", "Math C11 T2"],
+                estimation: {
+                    displayName: 'Estimation techniques asdasdsadads',
+                    tools: {
+                        'trapezoidal-rule': 'Trapezoidal rule'
+                    },
                     subCategories: null
                 }
             }
@@ -26,7 +28,7 @@ export const chemistryTools = {
             subCategories:  {
                 TEMPORARY: {
                     displayName: 'Chem Category 11',
-                    tools: ["Chem C11 T1", "Chem C11 T2"],
+                    tools: null,
                     subCategories: null
                 }
             }
@@ -43,8 +45,7 @@ export const physicsTools = {
             subCategories:  {
                 TEMPORARY: {
                     displayName: 'Physics Category 11',
-                    path: 'pc11',
-                    tools: ["Physics C11 T1", "Physics C11 T2"],
+                    tools: null,
                     subCategories: null
                 }
             }
@@ -62,7 +63,7 @@ export const engineeringTools = {
             subCategories:  {
                 TEMPORARY: {
                     displayName: 'Engineering Category 11',
-                    tools: ["Engineering C11 T1", "Engineering C11 T2"],
+                    tools: null,
                     subCategories: null
                 }
             }
@@ -80,7 +81,7 @@ export const irlGamesTools = {
             subCategories:  {
                 TEMPORARY: {
                     displayName: 'IRL Games Category  11',
-                    tools: ["IRL Games  C11 T1", "IRL Games  C11 T2"],
+                    tools: null,
                     subCategories: null
                 }
             }
@@ -98,7 +99,7 @@ export const videoGamesTools = {
             subCategories:  {
                 TEMPORARY: {
                     displayName: 'Video Games Category 11',
-                    tools: ["Video Games C11 T1", "Video Games C11 T2"],
+                    tools: null,
                     subCategories: null
                 }
             }
