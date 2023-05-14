@@ -3,7 +3,7 @@ import Home from './pages/Home';
 import AboutUs from './pages/AboutUs';
 import Contact from './pages/Contact';
 import NotFound from './pages/NotFound';
-import DefaultLayout from './components/DefaultLayout';
+import DefaultLayout from './components/UI/DefaultLayout';
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 function App() {

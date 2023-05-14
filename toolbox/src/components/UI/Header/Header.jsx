@@ -33,7 +33,7 @@ function Header(props) {
     
     return (
         <Box sx={headerStyle}>
-            {dimX == 0 && <SideNavBar inHeader={true}/>}
+            {dimX === 0 && <SideNavBar inHeader={true}/>}
             <Link
                 component={RouterLink}
                 to="/"

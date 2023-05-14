@@ -29,7 +29,6 @@ function NavBar(props) {
                         />
                     </IconButton>
                 )
-                break;
             case 1:
                 return (
                     <>
@@ -37,6 +36,10 @@ function NavBar(props) {
                         <NavBarLink href="about" text="About Us"/>
                         <NavBarLink href="contact" text="Contact Us"/>
                     </>
+                )
+            default:
+                return (
+                    <></>
                 )
         }
     }
@@ -46,4 +49,4 @@ function NavBar(props) {
         </Box>
     )
 }
-export default NavBar
+export default NavBar 
