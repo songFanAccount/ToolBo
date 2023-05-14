@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Drawer, IconButton, Typography, SvgIcon, Divider, List, ListItemButton, ListItemIcon, ListItemText, Slider } from '@mui/material';
+import { Box, Button, Drawer, Icon, IconButton, Typography, SvgIcon, Divider, List, ListItemButton, ListItemIcon, ListItemText, Slider } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
@@ -8,6 +8,7 @@ import SubdirectoryArrowRightIcon from '@mui/icons-material/SubdirectoryArrowRig
 import RemoveIcon from '@mui/icons-material/Remove';
 import CloseIcon from '@mui/icons-material/Close';
 import CallMadeIcon from '@mui/icons-material/CallMade';
+import DoubleArrowIcon from '@mui/icons-material/DoubleArrow';
 import { tools } from '../data';
 
 function SideNavBar(props) {
@@ -297,6 +298,7 @@ function SideNavBar(props) {
 						<ListItemButton
 							onClick={() => clickCategory(entry[0], entry[1])}
 							key={entry[0]}
+							disableRipple
 							sx={listItemStyle}
 						>
 							<SubdirectoryArrowRightIcon
@@ -341,33 +343,48 @@ function SideNavBar(props) {
 	)
 	const SideBarFooter = () => {
 		return (
-			<Box
+			<Button
+				TouchRippleProps={{
+					color: 'red'
+				}}
 				sx={{
 					mt: 'auto',
 					mb: 0,
-					borderTop: 1,
+					backgroundColor: '#011627',
 					height: 75,
 					width: 1,
 					display: 'flex',
 					justifyContent: 'space-evenly',
-					alignItems: 'center'
+					alignItems: 'center',
+					borderRadius: 0,
+					'&:hover': {
+						backgroundColor: '#011627'
+					}
 				}}
 			>
 					<Typography
 						sx={{
-							display: 'inline'
+							pt: 1.2,
+							fontFamily: 'Braah One',
+							fontSize: 18,
+							color: '#fdfffc'
 						}}
 					>
-						Footer
+						Explore {categories.length === 0 ? 'all categories' : 'current category'}
 					</Typography>
-					<Typography
+					<Icon
 						sx={{
-							display: 'inline'
+							pb: .5, 
+							color: '#fdfffc'
 						}}
 					>
-						Footer 2
-					</Typography>
-			</Box>
+						<DoubleArrowIcon
+							sx={{
+								fontSize: 28
+							}}
+						/>
+					</Icon>
+			</Button>
 		)
 	}
     /*
