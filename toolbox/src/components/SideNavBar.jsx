@@ -1,6 +1,6 @@
 import React from 'react';
-import { Box, Button, Drawer, Icon, IconButton, Typography, SvgIcon, Divider, List, ListItemButton, ListItemIcon, ListItemText, Slider } from '@mui/material';
-import { useLocation } from 'react-router-dom';
+import { Box, Button, Drawer, Icon, IconButton, Typography, SvgIcon, Divider, List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
+import { useLocation, Link } from 'react-router-dom';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ConstructionSharpIcon from '@mui/icons-material/ConstructionSharp';
@@ -12,13 +12,18 @@ import DoubleArrowIcon from '@mui/icons-material/DoubleArrow';
 import { tools } from '../data';
 
 function SideNavBar(props) {
-	const inHeader = props.inHeader
-    const [open, setOpen] = React.useState(false)
-	const [namePath, setNamePath] = React.useState([])
-    const [categories, setCategories] = React.useState([])
-	const [curCategory, setCurCategory] = React.useState(tools)
-	const [newPath, setNewPath] = React.useState("")
+	const inHeader = props.inHeader // Used to determine how the sideNavBar toggle is rendered based on viewport width (passed from DefaultLayout)
+    const [open, setOpen] = React.useState(false) // Whether the sideNavBar is open
+	const [namePath, setNamePath] = React.useState([]) // Display names path e.g. ['Maths', 'Integration', 'Estimation techniques']
+    const [categories, setCategories] = React.useState([]) // Actual url subdirectories e.g. ['maths', 'integration', 'estimation']
+	const [curCategory, setCurCategory] = React.useState(tools) // An object of the current category, defaulted to tools from data
+	const [newPath, setNewPath] = React.useState("") // A string used to direct to the appropriate tool page e.g. '/tools/maths/integration'
+	const [curPath, setCurPath] = React.useState('')
 	const location = useLocation()
+
+	React.useEffect(() => {
+		setCurPath(location.pathname)
+	}, [location])
 
 	const sectionTitleStyle = {
 		mt: 3,
@@ -44,21 +49,52 @@ function SideNavBar(props) {
 		fontFamily: 'Montserrat',
 	}
 	function processCurPath() {
-		const curPath = location.pathname
 		if(curPath.startsWith('/tools')) {
-			setNewPath(curPath)
-			const routes = "/tools/maths/integration".split("/")
-			console.log(routes)
+			/*
+			current url starts with /tools, this means we are on a potential tool page
+			So -> opening side nav bar should open at the current category
+
+			Starting with tools as root, for each subdirectory after /tools
+			Check if subdir is a valid subcategory of current category
+				- If yes: Branch to that subdir, continue
+				- If not: Check if subdir is a valid tool of current category [[NOTE: Logically this is what to do, but as explained below, can just conclude search]]
+					- If yes: curCategory is reached, conclude search
+					- If not (NOT subcat NOR tool): curCategory is also reached, conclude search, explanation below:
+
+					  e.g. /tools/validsubcat/X
+					  The loop should nav to validsubcat as current category successfully, then tries to process X
+					  Since X is neither subcat nor tool, it can either be invalid or potentially a valid non cat/tool page
+					  If it is invalid, router will automatically direct to 404 page, but the sidenavbar can stay on
+					  'validsubcat' as its current category.
+					  If it is potentially a valid subpage, it will also make sense to stay on 'validsubcat' in sidenavbar
+					  
+					  -> curCategory is reached in all scenarios, so conclude search
+			*/
 			let cat = tools
 			let cats = []
 			let names = ['Categories']
+			let path = '/tools'
+			const routes = curPath.split('/')
+			console.log(routes)
 			for(let i = 2; i < routes.length; i++) {
-				cat = cat[routes[i]]
-				cats.push(routes[i])
-				names.push(cat.displayName)
+				const newCat = cat.subCategories?.[routes[i]]
+				if(newCat) { // Valid subcategory case
+					cat = newCat
+					cats.push(routes[i])
+					path += `/${routes[i]}`
+					names.push(cat.displayName)
+				} else { // Not subcategory
+					break
+				}
+				// const newCat = cat.subCategories[routes[i]]
+				// if(newCat) {cat = newCat;}
+				// cats.push(routes[i])
+				// names.push(cat.displayName)
+				// console.log(i)
 			}
 			setCurCategory(cat)
 			setCategories(cats)
+			setNewPath(path)
 			setNamePath(names)
 		} else {
 			setNewPath('/tools')
@@ -78,9 +114,6 @@ function SideNavBar(props) {
         if(!open) {return}
         console.log("Closing side nav bar")
         setOpen(false)
-        setCategories([])
-		setNewPath("")
-		setNamePath([])
     }
     const PrevArrow = () => (
         <SvgIcon
@@ -208,7 +241,6 @@ function SideNavBar(props) {
 			<Divider/>
 		</Box>
 	)
-	
 	const Tools = () => (
 		<>
 			<Box
@@ -230,6 +262,9 @@ function SideNavBar(props) {
 					{
 						Object.entries(curCategory.tools).map((entry) => (
 							<ListItemButton
+								component={Link}
+								to={`${newPath}/${entry[0]}`}
+								onClick={toggleOff}
 								sx={listItemStyle}
 							>
 								<RemoveIcon
@@ -344,6 +379,9 @@ function SideNavBar(props) {
 	const SideBarFooter = () => {
 		return (
 			<Button
+				component={Link}
+				to={newPath}
+				onClick={toggleOff}
 				TouchRippleProps={{
 					color: 'red'
 				}}

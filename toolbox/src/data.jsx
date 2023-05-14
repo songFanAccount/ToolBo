@@ -10,7 +10,7 @@ export const mathsTools = {
                     displayName: 'Estimation techniques',
                     tools: {
                         'trapezoidal-rule': 'Trapezoidal rule',
-                        'trapezoidal-rule1': "Simpson's rule"
+                        'simpsons-rule': "Simpson's rule"
                     },
                     subCategories: {
                         TEMPORARY: {
