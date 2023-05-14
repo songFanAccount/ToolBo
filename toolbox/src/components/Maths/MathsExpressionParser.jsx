@@ -1,6 +1,17 @@
-function MathsExpressionParser() {
+import { Box, TextField } from "@mui/material";
+
+function MathsExpressionParser(props) {
     return (
-        <h2>Expression Parser</h2>
+        <Box
+            sx={props.sx}
+        >
+            <TextField
+                placeholder="Enter your expression here!"
+                sx={{
+                    width: 1
+                }}
+            />
+        </Box> 
     )
 }
 

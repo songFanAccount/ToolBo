@@ -25,7 +25,11 @@ function DefaultLayout() {
         >
             <Header dimX={dimX}/>
             {dimX > 0 && <SideNavBar dimX={dimX} inHeader={false}/>}
-            <MathsExpressionParser/>
+            <MathsExpressionParser
+                sx={{
+                    width: 500,
+                }}
+            />
             <Outlet dimX={dimX}/>
         </Box>
     )
