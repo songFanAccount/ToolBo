@@ -2,7 +2,6 @@ import { Box, useMediaQuery } from '@mui/material';
 import { Outlet } from 'react-router-dom';
 import Header from './Header/Header';
 import SideNavBar from './SideNavBar';
-import MathsExpressionParser from '../Maths/MathsExpressionParser';
 
 function DefaultLayout() {
     /*
@@ -25,11 +24,6 @@ function DefaultLayout() {
         >
             <Header dimX={dimX}/>
             {dimX > 0 && <SideNavBar dimX={dimX} inHeader={false}/>}
-            <MathsExpressionParser
-                sx={{
-                    width: 500,
-                }}
-            />
             <Outlet dimX={dimX}/>
         </Box>
     )
