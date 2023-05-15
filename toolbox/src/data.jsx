@@ -2,9 +2,11 @@ export const mathsTools = {
     displayName: 'Maths',
     tools: null,
     subCategories: {
-        integration: {
-            displayName: 'Integration',
-            tools: null,
+        differentiation: {
+            displayName: 'Differentiation',
+            tools: {
+                'stationary-points': 'Stationary points'
+            },
             subCategories:  {
                 estimation: {
                     displayName: 'Estimation techniques',
