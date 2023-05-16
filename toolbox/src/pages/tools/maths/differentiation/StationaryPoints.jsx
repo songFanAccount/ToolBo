@@ -1,6 +1,7 @@
 import { Box, TextField } from '@mui/material';
 import React from 'react';
-import { parse } from 'mathjs';
+import { parse, evaluate } from 'mathjs';
+import LatexDisplay from '../../../../components/Maths/LatexDisplay';
 
 /*
 Expression parser
@@ -14,23 +15,18 @@ export default function StationaryPoints() {
 
     function handleChange(event) {
         try {
-            parse(event.target.value)
-            
+            const parsed = parse(event.target.value)
+            console.log(parsed)
+            console.log(evaluate(event.target.value))
         } catch(e) {
             console.log("INVALID EXPR")
         }
-        setTex(`$${event.target.value}$`)
+        setTex(`${event.target.value}`)
     }
-    React.useEffect(()=>{
-        if( typeof window?.MathJax !== "undefined"){
-            window.MathJax.typesetClear()
-            window.MathJax.typeset()
-        }
-    },[tex])
     return (
         <Box>
             <TextField onChange={(e) => handleChange(e)}/>
-            <p>{tex}</p>
+            <LatexDisplay mathExpr={tex}/>
         </Box>
     )
 }
