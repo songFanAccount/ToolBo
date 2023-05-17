@@ -31,8 +31,7 @@ function LatexDisplay({mathExpr}) {
         'arctan': '\\arctan',
 
         'log': '\\ln',
-        'ln': '\\ln',
-        longestPossible: 6 // Used by logic below to determine whether variables form a function -> is to be hardcoded
+        'ln': '\\ln'
     }
     const expr = getLatexEquivalent()
     
@@ -42,6 +41,8 @@ function LatexDisplay({mathExpr}) {
         let curToken = ''
         let curType = tokenTypes.none
         let numOpenBrac = 0
+        let isUnary = false
+        let needNegate = false
         for(let i = 0; i < expr.length; i++) {
             // console.log("curToken = " + curToken + " of type " + curType)
             const newChar = expr[i]
@@ -59,12 +60,6 @@ function LatexDisplay({mathExpr}) {
                     if(numOpenBrac < 0) { // Too many closing brackets
                         throw new Error('Invalid expression: Too many closing brackets!')
                     }
-                } else if(newChar === '-') { // - after operators are not operators, but instead negation signs
-                    /*
-                    If current operator token is + or -, simply negate them so that + becomes -, and - becomes +
-                    */
-                    if(curToken === '+') {curToken = '-'; continue}
-                    else if(curToken === '-') {curToken = '+'; continue}
                 }
             } else {
                 if(newChar === '.' && curType === tokenTypes.number && curToken.at(-1) !== '.') { // Special case for decimal numbers
@@ -74,8 +69,26 @@ function LatexDisplay({mathExpr}) {
                 throw new Error(`Invalid character: ${newChar}`)
             }
             // console.log("new char = " + newChar + " of type = " + newType)
+            if(isUnary) {
+                if(newChar === '-') {
+                    needNegate = !needNegate
+                } else {
+                    isUnary = false
+                    curToken = newChar
+                    curType = newType
+                }
+                continue
+            }
             switch(curType) {
                 case tokenTypes.none:
+                    if(newType === tokenTypes.operator) {
+                        if(newChar === '-') {
+                            isUnary = true
+                            needNegate = true
+                        } else if (newChar !== '(') {
+                            throw new Error("Cannot start expression with " + newChar + "!")
+                        }
+                    }
                     curToken = newChar
                     curType = newType
                     break
@@ -87,8 +100,10 @@ function LatexDisplay({mathExpr}) {
                         case tokenTypes.variable:
                             tokens.push({
                                 token: parseFloat(curToken).toString(),
-                                type: curType
+                                type: curType,
+                                negate: needNegate
                             })
+                            needNegate = false
                             tokens.push({token: '*', type: tokenTypes.operator, autoAdded: true})
                             curToken = newChar
                             curType = newType
@@ -96,8 +111,10 @@ function LatexDisplay({mathExpr}) {
                         case tokenTypes.operator:
                             tokens.push({
                                 token: parseFloat(curToken).toString(),
-                                type: curType
+                                type: curType,
+                                negate: needNegate
                             })
+                            needNegate = false
                             if(newChar === '(') { // e.g. 5( should be intepreted as 5 * (
                                 tokens.push({token: '*', type: tokenTypes.operator, autoAdded: true})
                             }
@@ -115,7 +132,8 @@ function LatexDisplay({mathExpr}) {
                         case tokenTypes.number:
                             throw new Error("Invalid expression: Cannot have number immediately after variables!")
                         case tokenTypes.variable:
-                            tokens.push({token: curToken, type: curType})
+                            tokens.push({token: curToken, type: curType, negate: needNegate})
+                            needNegate = false
                             tokens.push({token: '*', type: tokenTypes.operator, autoAdded: true})
                             curToken = newChar
                             break
@@ -144,6 +162,7 @@ function LatexDisplay({mathExpr}) {
                                                 formsFunction = true
                                                 curToken = potentialFunc
                                                 startFunctionIndex = i
+                                                needNegate = ithToken.negate !== undefined ? ithToken.negate : false
                                             }
                                         } else { // If we found anything else, then that would break the variable chain, so cannot be a function
                                             break
@@ -156,7 +175,7 @@ function LatexDisplay({mathExpr}) {
                                     }
                                 }
                             }
-                            tokens.push({token: curToken, type: curType})
+                            tokens.push({token: curToken, type: curType, negate: needNegate})
                             if(newChar === '(' && !formsFunction) { // e.g. x( should be intepreted as x * (
                                 tokens.push({token: '*', type: tokenTypes.operator, autoAdded: true})
                             }
@@ -176,16 +195,30 @@ function LatexDisplay({mathExpr}) {
                             curType = newType
                             break
                         case tokenTypes.operator:
+                            if(newChar === '-' && curToken !== ')') {
+                                if(curToken === '-') {
+                                    curToken = '+'
+                                } else if (curToken === '+') {
+                                    curToken = '-'
+                                } else {
+                                    isUnary = true
+                                    tokens.push({token: curToken, type: curType, negate: needNegate})
+                                    needNegate = true
+                                }
+                                continue  
+                            } 
                             switch(curToken) {
                                 case ')': // All operators following ) are valid
                                     break
                                 default:
-                                    if(!(newChar === '-' || newChar === '(')) { // If the new operator isn't - or (, expression invalid
+                                    if (newChar === '(') {
+                                        break
+                                    } else {
                                         throw new Error(`Operator problem: ${curToken + newChar}`)
                                     }
-                                    break
                             }
-                            tokens.push({token: curToken, type: curType})
+                            tokens.push({token: curToken, type: curType, negate: needNegate})
+                            needNegate = false
                             curToken = newChar
                             break
                         default:
@@ -197,13 +230,21 @@ function LatexDisplay({mathExpr}) {
             }
         }
         // Push last token
-        tokens.push({token: curToken, type: curType})
+        if(!isUnary) {
+            tokens.push({token: curToken, type: curType, negate: needNegate})
+        }  
         return tokens
     }
     function tokensToString(tokens) {
         let ret = ''
         tokens.forEach((e) => ret += e.token)
         return ret
+    }
+    const precedence = {
+
+    }
+    function arrangeToPostfix(tokens) {
+        let output = []
     }
     function tokensToLatex(tokens) {
         let ret = ''
@@ -220,7 +261,7 @@ function LatexDisplay({mathExpr}) {
             return ret
         } catch (error) {
             console.log(error.toString())
-            throw error
+            return 'Unable to convert to Latex'
         }
     }
     React.useEffect(() => {
