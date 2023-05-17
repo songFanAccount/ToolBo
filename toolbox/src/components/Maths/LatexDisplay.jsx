@@ -18,6 +18,24 @@ function LatexDisplay({mathExpr}) {
         '(': '(',
         ')': ')'
     }
+    const precedence = {
+        '+': 2,
+        '-': 2,
+        '*': 3,
+        '/': 3,
+        '^': 4,
+        '(': 0,
+        ')': 0
+    }
+    const associativity = {
+        '+': -1,
+        '-': -1,
+        '*': -1,
+        '/': -1,
+        '^': 1,
+        '(': 0,
+        ')': 0
+    }
     const supportedFunctions = {
         'sin': '\\sin',
         'cos': '\\cos',
@@ -232,7 +250,11 @@ function LatexDisplay({mathExpr}) {
         // Push last token
         if(!isUnary) {
             tokens.push({token: curToken, type: curType, negate: needNegate})
-        }  
+        }
+        // Push right parentheses until all left parentheses are matched
+        for(let i = 0; i < numOpenBrac; i++) {
+            tokens.push({token: ')', type: tokenTypes.operator})
+        }
         return tokens
     }
     function tokensToString(tokens) {
@@ -240,15 +262,91 @@ function LatexDisplay({mathExpr}) {
         tokens.forEach((e) => ret += e.token)
         return ret
     }
-    const precedence = {
-
-    }
-    function arrangeToPostfix(tokens) {
+    /*
+    Implemented using Shunting-Yard algorithm https://en.wikipedia.org/wiki/Shunting_yard_algorithm 
+    */
+    function getTokensInPostfix(tokens) {
         let output = []
+        let operatorStack = []
+        function outputPush(token) {
+            output.push(token)
+        }
+        function logOutput() {
+            let ret = ''
+            output.forEach((e) => ret += e.token)
+            console.log(ret)
+        }
+        // function logOPStack() {
+        //     let ret = ''
+        //     operatorStack.forEach((e) => ret += e.token)
+        //     console.log(ret)
+        // }
+        function processToken(token) {
+            const value = token.token
+            const type = token.type
+            switch(type) {
+                case tokenTypes.number:
+                case tokenTypes.variable:
+                    outputPush(token)
+                    break
+                case tokenTypes.function:
+                    operatorStack.unshift(token)
+                    break
+                case tokenTypes.operator:
+                    if(value === '(') {
+                        operatorStack.unshift(token)
+                    } else if (value === ')') {
+                        if(operatorStack.length === 0) {throw new Error("Cannot find matching '(' for this ')'")}
+                        while(operatorStack[0].token !== '(') {
+                            outputPush(operatorStack.shift())
+                            if(operatorStack.length === 0) {
+                                throw new Error("Cannot find matching '(' for this ')'")
+                            }
+                        }
+                        // Popping the ( and discard it
+                        operatorStack.shift()
+                        if(operatorStack.length !== 0 && operatorStack[0].type === tokenTypes.function) {
+                            outputPush(operatorStack.shift())
+                        }
+                    } else {
+                        if(operatorStack.length > 0) {
+                            let opStackTop = operatorStack[0].token
+                            const O1Prec = precedence[value]
+                            let O2Prec = precedence[opStackTop]
+                            const O1Assoc = associativity[value]
+                            while(opStackTop !== '(' && 
+                                (O2Prec > O1Prec || (O2Prec === O1Prec && O1Assoc === -1))) {
+                                outputPush(operatorStack.shift())
+                                // Update each variable
+                                if(operatorStack.length <= 0) {break}
+                                opStackTop = operatorStack[0].token
+                                O2Prec = precedence[opStackTop]
+                            }
+                        }
+                        operatorStack.unshift(token)
+                    }
+                    break
+                default:
+                    throw new Error("Invalid token type!")
+            }
+        }
+        for(let i = 0; i < tokens.length; i++) {
+            processToken(tokens[i])
+        }
+        while(operatorStack.length !== 0) {
+            const opStackTop = operatorStack.shift()
+            if(opStackTop.token === '(') {
+                throw new Error("Mismatch of parentheses!")
+            }
+            outputPush(opStackTop)
+        }
+        logOutput()
+        return output
     }
     function tokensToLatex(tokens) {
         let ret = ''
         tokens.forEach((e) => ret += e.token)
+        getTokensInPostfix(tokens)
         return ret
     }
     function getLatexEquivalent() {
