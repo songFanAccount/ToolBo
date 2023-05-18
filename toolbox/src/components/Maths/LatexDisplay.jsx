@@ -25,7 +25,8 @@ function LatexDisplay({mathExpr}) {
         '/': 3,
         '^': 4,
         '(': 0,
-        ')': 0
+        ')': 0,
+        'function': 5
     }
     const associativity = {
         '+': -1,
@@ -52,7 +53,7 @@ function LatexDisplay({mathExpr}) {
         'ln': '\\ln'
     }
     const expr = getLatexEquivalent()
-    
+    let tree = {}
     function getTokens(expr) {
         expr = expr.replaceAll(' ', '') // Getting rid of all spaces
         let tokens = []
@@ -134,7 +135,7 @@ function LatexDisplay({mathExpr}) {
                             })
                             needNegate = false
                             if(newChar === '(') { // e.g. 5( should be intepreted as 5 * (
-                                tokens.push({token: '*', type: tokenTypes.operator, autoAdded: true})
+                                //tokens.push({token: '*', type: tokenTypes.operator, autoAdded: true})
                             }
                             curToken = newChar
                             curType = newType
@@ -208,6 +209,7 @@ function LatexDisplay({mathExpr}) {
                     switch(newType) {
                         case tokenTypes.number: // Operator followed by number should behave the same as variables do
                         case tokenTypes.variable:
+                            if(curToken === ')') {throw new Error("Invalid expression: Cannot have number/variable immediately after ')'!")}
                             tokens.push({token: curToken, type: curType})
                             curToken = newChar
                             curType = newType
@@ -250,6 +252,11 @@ function LatexDisplay({mathExpr}) {
         // Push last token
         if(!isUnary) {
             tokens.push({token: curToken, type: curType, negate: needNegate})
+        }
+        // Matching open parentheses:
+        // If the last token was a '(', need to manually supply an argument before closing parentheses
+        if(curToken === '(') {
+            tokens.push({token: '4', type: tokenTypes.number, fillArg: true})
         }
         // Push right parentheses until all left parentheses are matched
         for(let i = 0; i < numOpenBrac; i++) {
@@ -313,6 +320,7 @@ function LatexDisplay({mathExpr}) {
                             let opStackTop = operatorStack[0].token
                             const O1Prec = precedence[value]
                             let O2Prec = precedence[opStackTop]
+                            if(operatorStack[0].type === tokenTypes.function) {O2Prec = precedence['function']}
                             const O1Assoc = associativity[value]
                             while(opStackTop !== '(' && 
                                 (O2Prec > O1Prec || (O2Prec === O1Prec && O1Assoc === -1))) {
@@ -321,6 +329,7 @@ function LatexDisplay({mathExpr}) {
                                 if(operatorStack.length <= 0) {break}
                                 opStackTop = operatorStack[0].token
                                 O2Prec = precedence[opStackTop]
+                                if(operatorStack[0].type === tokenTypes.function) {O2Prec = precedence['function']}
                             }
                         }
                         operatorStack.unshift(token)
@@ -343,10 +352,63 @@ function LatexDisplay({mathExpr}) {
         logOutput()
         return output
     }
+    function generateNode(tokens, iArray) {
+        const i = iArray[0]
+        if(i < 0) {return null}
+        const value = tokens[i]
+        let node = {
+            value: value,
+            left: null,
+            right: null
+        }
+        iArray[0] = i-1
+        if(value.type === tokenTypes.number || value.type === tokenTypes.variable) {return node}
+        const right = generateNode(tokens, iArray)
+        const left = value.type === tokenTypes.function ? null : generateNode(tokens, iArray)
+        node.left = left
+        node.right = right
+        return node
+    }
+    /* Assumes tokens given in postfix, read from right to left to produce expression tree */
+    /* This is the function that sets up conditions for recursion */
+    function generateExprTree(tokens) {
+        return generateNode(tokens, [tokens.length - 1])
+    }
+    function treeToLatex(tree, msgArray) {
+        if(!tree) {return}
+        const curToken = tree.value
+        let addParenthesesLeft = false
+        switch(curToken.type) {
+            case tokenTypes.function:
+                addParenthesesLeft = true
+                break
+            default:
+                break
+        }
+        treeToLatex(tree.left, msgArray)
+        let addParenthesesRight = false
+        if(!curToken.fillArg) {
+            msgArray[0] += curToken.token
+        } 
+        switch(curToken.type) {
+            case tokenTypes.function:
+                addParenthesesRight = true
+                break
+            default:
+                break
+        }
+        if(addParenthesesRight) {msgArray[0] += '('}
+        treeToLatex(tree.right, msgArray)
+        if(addParenthesesRight) {msgArray[0] += ')'}
+    }
     function tokensToLatex(tokens) {
         let ret = ''
         tokens.forEach((e) => ret += e.token)
-        getTokensInPostfix(tokens)
+        const postfixTokens = getTokensInPostfix(tokens)
+        const tree = generateExprTree(postfixTokens)
+        let msgArray = ['']
+        treeToLatex(tree, msgArray)
+        console.log(msgArray[0])
         return ret
     }
     function getLatexEquivalent() {
