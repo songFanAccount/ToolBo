@@ -25,7 +25,10 @@ export default function StationaryPoints() {
     }
     return (
         <Box>
-            <TextField onChange={(e) => handleChange(e)}/>
+            <TextField
+                sx={{minWidth: 'fit-content', width:400}}
+                onChange={(e) => handleChange(e)}
+            />
             <LatexDisplay mathExpr={tex}/>
         </Box>
     )

@@ -135,7 +135,7 @@ function LatexDisplay({mathExpr}) {
                             })
                             needNegate = false
                             if(newChar === '(') { // e.g. 5( should be intepreted as 5 * (
-                                //tokens.push({token: '*', type: tokenTypes.operator, autoAdded: true})
+                                tokens.push({token: '*', type: tokenTypes.operator, autoAdded: true})
                             }
                             curToken = newChar
                             curType = newType
@@ -209,8 +209,8 @@ function LatexDisplay({mathExpr}) {
                     switch(newType) {
                         case tokenTypes.number: // Operator followed by number should behave the same as variables do
                         case tokenTypes.variable:
-                            if(curToken === ')') {throw new Error("Invalid expression: Cannot have number/variable immediately after ')'!")}
                             tokens.push({token: curToken, type: curType})
+                            if(curToken === ')') {tokens.push({token: '*', type: tokenTypes.operator, autoAdded: true})}
                             curToken = newChar
                             curType = newType
                             break
@@ -227,17 +227,12 @@ function LatexDisplay({mathExpr}) {
                                 }
                                 continue  
                             } 
-                            switch(curToken) {
-                                case ')': // All operators following ) are valid
-                                    break
-                                default:
-                                    if (newChar === '(') {
-                                        break
-                                    } else {
-                                        throw new Error(`Operator problem: ${curToken + newChar}`)
-                                    }
-                            }
+
+                            if(curToken !== ')' && newChar !== '(') {throw new Error(`Operator problem: ${curToken + newChar}`)}
                             tokens.push({token: curToken, type: curType, negate: needNegate})
+                            if(curToken === ')' && newChar === '(') {
+                                tokens.push({token: '*', type: tokenTypes.operator, autoAdded: true})
+                            }
                             needNegate = false
                             curToken = newChar
                             break
@@ -255,7 +250,7 @@ function LatexDisplay({mathExpr}) {
         }
         // Matching open parentheses:
         // If the last token was a '(', need to manually supply an argument before closing parentheses
-        if(curToken === '(') {
+        if(curType === tokenTypes.operator && curToken !== ')') {
             tokens.push({token: '4', type: tokenTypes.number, fillArg: true})
         }
         // Push right parentheses until all left parentheses are matched
@@ -377,29 +372,78 @@ function LatexDisplay({mathExpr}) {
     function treeToLatex(tree, msgArray) {
         if(!tree) {return}
         const curToken = tree.value
-        let addParenthesesLeft = false
+        const left = tree.left
+        const right = tree.right
         switch(curToken.type) {
+            case tokenTypes.variable:
+            case tokenTypes.number:
+                msgArray[0] += curToken.fillArg ? '?' : curToken.token
+                return
             case tokenTypes.function:
-                addParenthesesLeft = true
-                break
+                // Current implementation ensures left will be null
+                // Get the Latex string of the function, and wrap the arguments in parenthese
+                msgArray[0] += supportedFunctions[curToken.token] + '('
+                treeToLatex(right, msgArray)
+                msgArray[0] += ')'
+                return
+            case tokenTypes.operator:
+                let addParenthesesLeft
+                let addParenthesesRight
+                switch(curToken.token) {
+                    case '+': // Dont need to do anything fancy
+                        treeToLatex(left, msgArray)
+                        msgArray[0] += '+'
+                        treeToLatex(right, msgArray)
+                        return
+                    case '-': // Dont need to do anything to left side, but if right is +/-, will need to wrap in parentheses
+                        treeToLatex(left, msgArray)
+                        msgArray[0] += '-'
+                        addParenthesesRight = right?.value?.token === '+' || right?.value?.token === '-'
+                        if(addParenthesesRight) {msgArray[0] += '('}
+                        treeToLatex(right, msgArray)
+                        if(addParenthesesRight) {msgArray[0] += ')'}
+                        return
+                    case '*': // In all scenarios, a multiply sign is only needed if the beginning of the right expression is a number
+                        addParenthesesLeft = precedence[curToken.token] > precedence[left?.value.token]
+                        if(addParenthesesLeft) {msgArray[0] += '('}
+                        treeToLatex(left, msgArray)
+                        if(addParenthesesLeft) {msgArray[0] += ')'}
+                        // Store current index in the message for \cdot insertion later
+                        const insertIndex = msgArray[0].length
+                        addParenthesesRight = precedence[curToken.token] > precedence[right?.value.token]
+                        if(addParenthesesRight) {msgArray[0] += '('}
+                        treeToLatex(right, msgArray)
+                        if(addParenthesesRight) {msgArray[0] += ')'}
+                        if(msgArray[0].length <= insertIndex) {
+                            throw new Error("Invalid expression: Nothing on the right of *?")
+                        } else {
+                            if(msgArray[0][insertIndex] >= '0' && msgArray[0][insertIndex] <= '9') { // Start of right expression is a number, add \cdot
+                                msgArray[0] = msgArray[0].slice(0, insertIndex) + supportedOperators['*'] + ' ' + msgArray[0].slice(insertIndex)
+                            }
+                        }
+                        return
+                    case '/': // Using dfrac: \dfrac{left}{right}
+                        msgArray[0] += supportedOperators['/'] + '{'
+                        treeToLatex(left, msgArray)
+                        msgArray[0] += '}{'
+                        treeToLatex(right, msgArray)
+                        msgArray[0] += '}'
+                        return
+                    case '^': // Wrap left in parentheses if needed, wrap right in braces for Latex
+                        addParenthesesLeft = precedence[curToken.token] >= precedence[left?.value.token]
+                        if(addParenthesesLeft) {msgArray[0] += '('}
+                        treeToLatex(left, msgArray)
+                        if(addParenthesesLeft) {msgArray[0] += ')'}
+                        msgArray[0] += '^{'
+                        treeToLatex(right, msgArray)
+                        msgArray[0] += '}'
+                        return
+                    default:
+                        throw new Error("Invalid token type!")
+                }
             default:
-                break
+                throw new Error("Invalid token type!")
         }
-        treeToLatex(tree.left, msgArray)
-        let addParenthesesRight = false
-        if(!curToken.fillArg) {
-            msgArray[0] += curToken.token
-        } 
-        switch(curToken.type) {
-            case tokenTypes.function:
-                addParenthesesRight = true
-                break
-            default:
-                break
-        }
-        if(addParenthesesRight) {msgArray[0] += '('}
-        treeToLatex(tree.right, msgArray)
-        if(addParenthesesRight) {msgArray[0] += ')'}
     }
     function tokensToLatex(tokens) {
         let ret = ''
@@ -408,8 +452,7 @@ function LatexDisplay({mathExpr}) {
         const tree = generateExprTree(postfixTokens)
         let msgArray = ['']
         treeToLatex(tree, msgArray)
-        console.log(msgArray[0])
-        return ret
+        return msgArray[0]
     }
     function getLatexEquivalent() {
         let tokens 
@@ -418,6 +461,7 @@ function LatexDisplay({mathExpr}) {
             console.log(tokens)
             console.log(tokensToString(tokens))
             const ret = tokensToLatex(tokens)
+            console.log("ret without latex format: " + ret)
             return ret
         } catch (error) {
             console.log(error.toString())
@@ -431,7 +475,12 @@ function LatexDisplay({mathExpr}) {
     }, [expr])
 
     return (
-        <p>{expr}</p>
+        <>
+            <p>The Latex produced:</p>
+            <p>{expr}</p>
+            <p>The Latex interpreted:</p>
+            <p>{`$${expr}$`}</p>
+        </>
     )
 }
 
