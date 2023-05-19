@@ -16,17 +16,19 @@ function LatexDisplay({mathExpr}) {
         '/': '\\dfrac',
         '^': '^',
         '(': '(',
-        ')': ')'
+        ')': ')',
+        '@': 6
     }
     const precedence = {
         '+': 2,
         '-': 2,
         '*': 3,
         '/': 3,
-        '^': 4,
+        '^': 5,
         '(': 0,
         ')': 0,
-        'function': 5
+        'function': 6,
+        '@': 4
     }
     const associativity = {
         '+': -1,
@@ -35,7 +37,8 @@ function LatexDisplay({mathExpr}) {
         '/': -1,
         '^': 1,
         '(': 0,
-        ')': 0
+        ')': 0,
+        '@': -1
     }
     const supportedFunctions = {
         'sin': '\\sin',
@@ -104,6 +107,14 @@ function LatexDisplay({mathExpr}) {
                 if(newChar === '-') {
                     needNegate = !needNegate
                 } else {
+                    if(newType === tokenTypes.operator && newChar !== '(') {
+                        throw new Error("Invalid expression: -" + newChar)
+                    }
+                    if(needNegate) {
+                        tokens.push({token: '1', type: tokenTypes.number, negate: true})
+                        tokens.push({token: '@', type: tokenTypes.operator})
+                        needNegate = false
+                    }
                     isUnary = false
                     curToken = newChar
                     curType = newType
@@ -235,7 +246,7 @@ function LatexDisplay({mathExpr}) {
                                     curToken = '-'
                                 } else {
                                     isUnary = true
-                                    tokens.push({token: curToken, type: curType, negate: needNegate})
+                                    tokens.push({token: curToken, type: curType})
                                     needNegate = true
                                 }
                                 continue  
@@ -389,6 +400,7 @@ function LatexDisplay({mathExpr}) {
         if(!tree) {return -1}
         const curToken = tree.value
         const needNegate = curToken.negate ? 1 : 0
+        if(needNegate) {return 1}
         const left = tree.left
         const right = tree.right
         switch(curToken.type) {
@@ -433,6 +445,16 @@ function LatexDisplay({mathExpr}) {
                         if(addParenthesesRight) {msgArray[0] += ')'}
                         sign = subExprNegate ? '+' : '-'
                         msgArray[0] = insertStr(msgArray[0], insertIndex, sign)
+                        return subExprNegate
+                    case '@':
+                        negateIndex = msgArray[0].length
+                        addParenthesesRight = precedence['*'] > precedence[right?.value.token]
+                        if(addParenthesesRight) {msgArray[0] += '('}
+                        subExprNegate = !treeToLatex(right, msgArray, true)
+                        if(addParenthesesRight) {msgArray[0] += ')'}
+                        if(!controlNegate && subExprNegate) {
+                            msgArray[0] = insertStr(msgArray[0], negateIndex, '-')
+                        }
                         return subExprNegate
                     case '*': // In all scenarios, a multiply sign is only needed if the beginning of the right expression is a number
                         negateIndex = msgArray[0].length
@@ -525,4 +547,4 @@ function LatexDisplay({mathExpr}) {
 
 export default LatexDisplay
 
-// FOR TESTING PURPOSES: ((-bs(x+t))^(2(x+z))-4.5)/(x+4(5x+-------7))*-------arcsin(x/4/(7n/-9))+9-----8k^2+x*4*y^2
+// FOR TESTING PURPOSES: ((-(x+t))^(2(-x+z))-4.5)/(x+4(5x+-------7))*-------arcsin(-x/4/(7n/-9))+9-----8k^2+x*4*y^2/-tan(-xcos(y)/csc(m)
