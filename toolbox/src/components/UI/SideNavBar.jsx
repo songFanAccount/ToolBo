@@ -264,6 +264,7 @@ function SideNavBar(props) {
 							<ListItemButton
 								component={Link}
 								to={`${newPath}/${entry[0]}`}
+								key={entry[0]}
 								id={entry[0]}
 								onClick={toggleOff}
 								sx={listItemStyle}

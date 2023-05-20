@@ -10,6 +10,7 @@ import Differentiation from './pages/tools/maths/differentiation/Differentiation
 import StationaryPoints from './pages/tools/maths/differentiation/StationaryPoints';
 
 import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom';
+import LatexConverter from './pages/tools/maths/LatexConverter';
 function App() {
 	return (
     	<BrowserRouter>
@@ -23,6 +24,7 @@ function App() {
 						<Route index element={<Tools/>}/>
 						<Route path="maths">
 							<Route index element={<Maths/>}/>
+							<Route path="latex-converter" element={<LatexConverter/>}/>
 							<Route path="differentiation">
 								<Route index element={<Differentiation/>}/>
 								<Route path="stationary-points" element={<StationaryPoints/>}/>
