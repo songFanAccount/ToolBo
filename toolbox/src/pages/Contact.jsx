@@ -1,6 +1,16 @@
+import { Box, Typography } from "@mui/material"
+import { Helmet } from "react-helmet"
+
 function Contact() {
     return (
-        <h1>Contact Us page</h1>
+        <>
+            <Helmet>
+                <title>Contact Us</title>
+            </Helmet>
+            <Box> 
+                <Typography>Contact Us</Typography>
+            </Box>
+        </>  
     )
 }
 export default Contact

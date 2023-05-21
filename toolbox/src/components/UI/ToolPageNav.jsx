@@ -51,7 +51,6 @@ function ToolPageNav() {
                 <ListLink text="The Tool"/>
                 <ListLink text="How to use"/>
                 <ListLink text="Important notes and advice"/>
-                <ListLink text="What it can be used for"/>
                 <ListLink text="How it works"/>
                 <ListLink text="Why it works"/>
             </List>

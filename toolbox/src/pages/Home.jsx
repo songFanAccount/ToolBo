@@ -1,14 +1,16 @@
 import { Box, Typography } from '@mui/material';
+import { Helmet } from 'react-helmet';
 
 function Home() {
-    const boxStyle = {
-        height: 2000,
-        border: 0
-    }
     return (
-        <Box sx={boxStyle}> 
-            <Typography>Home Page</Typography>
-        </Box>
+        <>
+            <Helmet>
+                <title>Home</title>
+            </Helmet>
+            <Box> 
+                <Typography>Home Page</Typography>
+            </Box>
+        </>  
     )
 }
 
