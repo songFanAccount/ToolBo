@@ -1,7 +1,6 @@
 import { Box, useMediaQuery } from '@mui/material';
 import { Outlet } from 'react-router-dom';
 import Header from './Header/Header';
-import SideBar from './SideBar';
 
 function DefaultLayout() {
     /*
@@ -23,7 +22,7 @@ function DefaultLayout() {
                     overflowX: 'clip',
                     height: '100vh',
                     backgroundColor: '#eeeeee',
-                    zIndex: 7
+                    zIndex: -1
                 }}
             />
             <Box className="defaultLayout"
@@ -36,36 +35,12 @@ function DefaultLayout() {
                     position: 'fixed',
                     top: 0,
                     left: 0,
-                    zIndex: 9,
-                }}
-            >
-                <Header dimX={dimX}/>
-                <Box
-                    sx={{
-                    }}
-                >
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            flexDirection: 'row',
-                            width: 350,
-                        }}
-                    >
-                        {dimX > 0 && <SideBar/>}
-                    </Box>
-                </Box>
-            </Box>
-            <Box className="pageContent"
-                sx={{
-                    position: 'absolute',
-                    overflowX: 'clip',
-                    top: 100,
-                    left: 350,
                     zIndex: 8,
                 }}
             >
-                <Outlet dimX={dimX}/>
+                <Header dimX={dimX}/>
             </Box>
+            <Outlet/>
         </>
     )
 }

@@ -17,6 +17,10 @@ function CollaboratorInfo() {
             >
                 Collaborator Info
             </Typography>
+            <Typography>PFP Placeholder</Typography>
+            <Typography>Name</Typography>
+            <Typography>About me</Typography>
+            <Typography>LinkedIn link</Typography>
         </Box>
     )
 }

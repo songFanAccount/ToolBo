@@ -11,6 +11,7 @@ import StationaryPoints from './pages/tools/maths/differentiation/StationaryPoin
 
 import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom';
 import LatexConverter from './pages/tools/maths/LatexConverter';
+import ToolPageLayout from './components/UI/toolPage/ToolPageLayout';
 function App() {
 	return (
     	<BrowserRouter>
@@ -20,7 +21,7 @@ function App() {
 					<Route path="about" element={<AboutUs />} />
 					<Route path="contact" element={<Contact />} />
 					<Route path="*" element={<NotFound />} />
-					<Route path="tools" element={<Outlet/>}>
+					<Route path="tools" element={<ToolPageLayout/>}>
 						<Route index element={<Tools/>}/>
 						<Route path="maths">
 							<Route index element={<Maths/>}/>

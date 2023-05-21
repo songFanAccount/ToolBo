@@ -484,7 +484,7 @@ function SideNavBar(props) {
 		<>
 			<Box
 				sx={{
-					alignSelf: inHeader ? 'inherit' : 'start', 
+					alignSelf: inHeader ? 'inherit' : 'start',
 				}}
 			>
 				<ToolsButton/>
