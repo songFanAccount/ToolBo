@@ -1,12 +1,13 @@
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 
 function Home() {
     const boxStyle = {
+        height: 2000,
         border: 0
     }
     return (
         <Box sx={boxStyle}> 
-            <h1>Home Page</h1>
+            <Typography>Home Page</Typography>
         </Box>
     )
 }

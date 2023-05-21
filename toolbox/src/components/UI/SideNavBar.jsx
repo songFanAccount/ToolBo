@@ -75,7 +75,6 @@ function SideNavBar(props) {
 			let names = ['Categories']
 			let path = '/tools'
 			const routes = curPath.split('/')
-			console.log(routes)
 			for(let i = 2; i < routes.length; i++) {
 				const newCat = cat.subCategories?.[routes[i]]
 				if(newCat) { // Valid subcategory case
@@ -86,11 +85,6 @@ function SideNavBar(props) {
 				} else { // Not subcategory
 					break
 				}
-				// const newCat = cat.subCategories[routes[i]]
-				// if(newCat) {cat = newCat;}
-				// cats.push(routes[i])
-				// names.push(cat.displayName)
-				// console.log(i)
 			}
 			setCurCategory(cat)
 			setCategories(cats)
@@ -105,14 +99,12 @@ function SideNavBar(props) {
 	}
     function toggleOn() {
         if(open) {return}
-        console.log("Opening side nav bar")
         setOpen(true)
 		processCurPath()
     }
 
     function toggleOff() {
         if(!open) {return}
-        console.log("Closing side nav bar")
         setOpen(false)
     }
     const PrevArrow = () => (
@@ -184,20 +176,15 @@ function SideNavBar(props) {
 
 	function toPrevCategory() {
 		setNamePath(namePath.slice(0, -1))
-		console.log(namePath)
 		setCategories(categories.slice(0, -1))
-		console.log(categories)
 		let paths = newPath.split('/')
 		paths.pop()
-		console.log(paths)
 		setNewPath(paths.join('/'))
-		console.log(newPath)
 		let newCat = tools
 		for(let i = 2; i < paths.length; i++) {
 			newCat = newCat.subCategories[paths[i]]
 		}
 		setCurCategory(newCat)
-		console.log(curCategory)
 	}
 	const HeadingButton = () => {
 		const isBack = categories.length > 0
@@ -312,14 +299,11 @@ function SideNavBar(props) {
 		</>
 	)
 	function clickCategory(key, value) {
-		console.log("Clicked " + key)
-		console.log(value)
 		setNewPath(`${newPath}/${key}`)
 		const newCat = curCategory.subCategories[key]
 		setCurCategory(newCat)
 		setCategories((prevCategories) => [...prevCategories, key])
 		setNamePath((prevNamePath) => [...prevNamePath, value.displayName])
-		console.log(namePath)
 	}
 	const SubCategories = () => (
 		<Box>
@@ -384,9 +368,6 @@ function SideNavBar(props) {
 				component={Link}
 				to={newPath}
 				onClick={toggleOff}
-				TouchRippleProps={{
-					color: 'red'
-				}}
 				sx={{
 					mt: 'auto',
 					mb: 0,
@@ -479,7 +460,9 @@ function SideNavBar(props) {
 			sx={{
 				color: 'black',
 				p: 1,
+				ml: 2.5,
 				mt: inHeader ? 0 : 3,
+				mb: inHeader ? 0 : 2,
 				borderRadius: 0
 			}}
 		>
@@ -498,25 +481,21 @@ function SideNavBar(props) {
 		</IconButton>
 	)
     return (
-        	<Box
+		<>
+			<Box
 				sx={{
-					my: 'auto'
+					alignSelf: inHeader ? 'inherit' : 'start', 
 				}}
 			>
-				<Box 
-					sx={{
-						ml: 2.5
-					}}
-				>
-					<ToolsButton/>
-				</Box>
-                <Drawer
-                    open={open}
-                    onClose={toggleOff}
-                >
-                    <Contents/>
-                </Drawer>
-            </Box>
+				<ToolsButton/>
+			</Box>
+			<Drawer
+				open={open}
+				onClose={toggleOff}
+			>
+				<Contents/>
+			</Drawer>
+		</>
     )
 }
 export default SideNavBar

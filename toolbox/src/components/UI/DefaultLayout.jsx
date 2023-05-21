@@ -1,7 +1,7 @@
 import { Box, useMediaQuery } from '@mui/material';
 import { Outlet } from 'react-router-dom';
 import Header from './Header/Header';
-import SideNavBar from './SideNavBar';
+import SideBar from './SideBar';
 
 function DefaultLayout() {
     /*
@@ -14,18 +14,59 @@ function DefaultLayout() {
         dimX = 1
     }
     // MAYBE TODO: Add new dimX = 2 for min-width:900px
-    const pageStyle = {
-        minHeight: '100vh',
-        backgroundColor: "#ADD8E6"
-    }
     return (
-        <Box
-            sx={pageStyle}
-        >
-            <Header dimX={dimX}/>
-            {dimX > 0 && <SideNavBar dimX={dimX} inHeader={false}/>}
-            <Outlet dimX={dimX}/>
-        </Box>
+        <>
+            <Box className="Background"
+                sx={{
+                    position: 'fixed',
+                    width: 'calc(100vw + 10px)',
+                    overflowX: 'clip',
+                    height: '100vh',
+                    backgroundColor: '#eeeeee',
+                    zIndex: 7
+                }}
+            />
+            <Box className="defaultLayout"
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    minHeight: '100vh',
+                    width: 'calc(100vw+10px)',
+                    overflowX: 'clip',
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    zIndex: 9,
+                }}
+            >
+                <Header dimX={dimX}/>
+                <Box
+                    sx={{
+                    }}
+                >
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            width: 350,
+                        }}
+                    >
+                        {dimX > 0 && <SideBar/>}
+                    </Box>
+                </Box>
+            </Box>
+            <Box className="pageContent"
+                sx={{
+                    position: 'absolute',
+                    overflowX: 'clip',
+                    top: 100,
+                    left: 350,
+                    zIndex: 8,
+                }}
+            >
+                <Outlet dimX={dimX}/>
+            </Box>
+        </>
     )
 }
 

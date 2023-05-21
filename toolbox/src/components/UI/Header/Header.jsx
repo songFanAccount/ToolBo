@@ -8,10 +8,13 @@ function Header(props) {
     // Below styles are the default (dimX == 1, vw >= 600px) style
     let headerStyle = {
         display: 'flex',
-        alignContent: 'center',
         alignItems: 'stretch',
         justifyContent: 'space-between',
         backgroundColor: '#011627',
+        position: 'fixed',
+        overflowX: 'clip',
+        top: 0,
+        width: 1,
         height: 100
     }
     let titleStyle = {

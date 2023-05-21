@@ -9,7 +9,6 @@ export function BinaryTree(props) {
         const displayStr = node ? node.token : ''
         const NodeInfo = ({str}) => (
             <Typography
-                key={useId()}
                 sx={{
                     p: 0,
                     m: 0,
@@ -82,7 +81,7 @@ export function BinaryTree(props) {
         <Box
             sx={{
                 display: 'flex',
-                justifyContent: 'flex-start'
+                justifyContent: 'center'
             }}
         >
             <Tree/>
