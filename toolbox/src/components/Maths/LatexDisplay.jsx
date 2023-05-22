@@ -269,7 +269,7 @@ function getTokens(expr) {
     // Matching open parentheses:
     // If the last token was a '(', need to manually supply an argument before closing parentheses
     if(curType === tokenTypes.operator && curToken !== ')') {
-        tokens.push({token: '4', type: tokenTypes.number, fillArg: true})
+        tokens.push({token: '?', type: tokenTypes.number, fillArg: true})
     }
     // Push right parentheses until all left parentheses are matched
     for(let i = 0; i < numOpenBrac; i++) {

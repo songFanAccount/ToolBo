@@ -1,25 +1,65 @@
-import { Box } from "@mui/material"
+import { Box, Typography } from "@mui/material"
 import CollaboratorInfo from "../CollaboratorInfo"
 import SideNavBar from "../SideNavBar"
 import ToolPageNav from "../ToolPageNav"
 
-function SideBar() {
+function SideBar({toolName}) {
     return (
         <Box
             sx={{
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                width: 350,
+                width: 300,
                 backgroundColor: '#ADD8E6',
                 position: 'fixed',
                 top: 100,
                 height: 'calc(100vh - 100px)',
                 zIndex: 9,
+                borderRight: 2,
+                borderColor: '#011627',
             }}
         >
             <SideNavBar inHeader={false}/>
-            <ToolPageNav/>
+            <Box
+                sx={{
+                    width: 0.8,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    border: 3,
+                    borderRadius: 1.5
+                }}
+            >
+                <Box
+                    sx={{
+                        width: 1,
+                        backgroundColor: '#011627',
+                    }}
+                >
+                    <Typography
+                        sx={{
+                            fontFamily: 'Montserrat',
+                            fontSize: 24,
+                            color: '#fdfffc',
+                            py: 1,
+                            ml: 1.2,
+                            overflowWrap: 'anywhere',
+                        }}
+                    >
+                        {toolName}
+                    </Typography>
+                </Box>
+                <ToolPageNav/>
+            </Box>
+            <Box
+                sx={{
+                    width: 0.9,
+                    borderTop: 2.5,
+                    mb: 2,
+                    mt: 'auto'
+                }}
+            />
             <CollaboratorInfo/>
         </Box>
     )

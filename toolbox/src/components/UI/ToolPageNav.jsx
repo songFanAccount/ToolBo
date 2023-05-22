@@ -11,9 +11,10 @@ function ToolPageNav() {
                     display: 'list-item',
                     width: 'fit-content',
                     color: 'black',
-                    fontSize: 16,
+                    fontSize: 18,
                     fontFamily: 'Ubuntu',
-                    p: 0.6,
+                    pt: 0.6,
+                    px: 0,
                     '&:hover': {
                         textDecoration: 'underline'
                     }
@@ -28,14 +29,16 @@ function ToolPageNav() {
             sx={{
                 display: 'flex',
                 flexDirection: 'column',
-                width: 0.8,
-                pb: 2
+                width: 1,
+                backgroundColor: '#c9e8f2',
             }}
         >
             <Typography
                 sx={{
                     fontSize: 24,
-                    fontFamily: 'Montserrat'
+                    fontFamily: 'Montserrat',
+                    mt: 1,
+                    ml: 1
                 }}
             >
                 Core sections:
@@ -50,7 +53,7 @@ function ToolPageNav() {
             >
                 <ListLink text="The Tool"/>
                 <ListLink text="How to use"/>
-                <ListLink text="Important notes and advice"/>
+                <ListLink text="Notes and advice"/>
                 <ListLink text="How it works"/>
                 <ListLink text="Why it works"/>
             </List>

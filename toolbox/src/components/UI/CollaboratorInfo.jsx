@@ -4,6 +4,7 @@ function CollaboratorInfo() {
     return (
         <Box
             sx={{
+                mb: 2,
                 display: 'flex',
                 flexDirection: 'column',
                 width: 0.8,
@@ -12,15 +13,40 @@ function CollaboratorInfo() {
             <Typography
                 sx={{
                     fontSize: 24,
-                    fontFamily: 'Montserrat'
+                    fontFamily: 'Montserrat',
+                    mb: 1.5
                 }}
             >
                 Collaborator Info
             </Typography>
-            <Typography>PFP Placeholder</Typography>
-            <Typography>Name</Typography>
-            <Typography>About me</Typography>
-            <Typography>LinkedIn link</Typography>
+            <Box
+                sx={{
+                    width: 1
+                }}
+            >
+                <Box
+                    sx={{
+                        display: 'flex',
+                    }}
+                >
+                    <Box
+                        sx={{
+                            height: 100,
+                            mr: 2,
+                            aspectRatio: '1 / 1',
+                            border: 1
+                        }}
+                    >
+                        PFP
+                    </Box>
+                    <Box>
+                        <Typography>Name</Typography>
+                        <Typography>LinkedIn link</Typography>
+                        <Typography>Other links</Typography>
+                    </Box>
+                </Box>
+                <Typography>About me</Typography>
+            </Box>
         </Box>
     )
 }
