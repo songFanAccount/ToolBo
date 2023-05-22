@@ -1,7 +1,7 @@
 export const mathsTools = {
     displayName: 'Maths',
     tools: {
-        'latex-converter': 'Latex Converter'
+        'latex-converter': 'LaTeX Converter'
     },
     subCategories: {
         differentiation: {

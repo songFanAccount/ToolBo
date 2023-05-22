@@ -462,7 +462,13 @@ function treeToLatex(tree, msgArray, controlNegate) {
                     if(msgArray[0].length <= insertIndex) {
                         throw new Error("Invalid expression: Nothing on the right of *?")
                     } else {
-                        if(msgArray[0][insertIndex] >= '0' && msgArray[0][insertIndex] <= '9') { // Start of right expression is a number, add \cdot
+                        let firstRightNum
+                        if(msgArray[0][insertIndex] === '{') {
+                            firstRightNum = msgArray[0][insertIndex+1] >= '0' && msgArray[0][insertIndex+1] <= '9'
+                        } else {
+                            firstRightNum = msgArray[0][insertIndex] >= '0' && msgArray[0][insertIndex] <= '9'
+                        }
+                        if(firstRightNum) { // Start of right expression is a number, add \cdot
                             msgArray[0] = msgArray[0].slice(0, insertIndex) + supportedOperators['*'] + ' ' + msgArray[0].slice(insertIndex)
                         }
                     }

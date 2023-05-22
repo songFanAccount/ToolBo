@@ -2,14 +2,14 @@ import { Box, TextField, Typography } from '@mui/material';
 import React from 'react';
 import { BinaryTree } from '../../../components/BinaryTree';
 import { exprToLatex } from '../../../components/Maths/LatexDisplay';
+import { ToolPageParagraph, ToolPageSectionTitle } from '../../../components/UI/toolPage/ToolPageLayout';
 
 /*
 Page Content:
 User input for math equation
 */
 function LatexConverter() {
-    const placeholder = ''
-    const [tex, setTex] = React.useState(placeholder)
+    const [tex, setTex] = React.useState('')
     const [tree, setTree] = React.useState({})
     const [delay, setDelay] = React.useState(1000)
 
@@ -30,7 +30,7 @@ function LatexConverter() {
 
     function handleChange(event) {
         try {
-            let input = event.target.value === '' ? placeholder : event.target.value
+            let input = event.target.value
             input = input.replaceAll(' ', '') // Getting rid of all spaces
             const latexObj = exprToLatex(input)
             console.log(latexObj)
@@ -42,23 +42,22 @@ function LatexConverter() {
     }
     return (
         <Box>
+            <ToolPageParagraph text="LaTeX converter takes in mathematical expressions and outputs the equivalent expression in LaTeX syntax."/>
+            <ToolPageParagraph text="Enter an expression:"/>
             <TextField
-                placeholder={placeholder}
-                sx={{minWidth: 'fit-content', width:1}}
+                placeholder="e.g. ax^2 + bx + c"
+                sx={{minWidth: 300, mb: 2}}
                 onChange={(e) => handleChange(e)}
             />
-            <p>Latex produced:</p>
-            <Typography>
-                {tex}
-            </Typography>
-            <p>Latex rendered:</p>
-            <Typography sx={{}}>
+            <ToolPageParagraph text={`The converted LaTeX expression: ${tex}`}/>
+            <ToolPageParagraph text="LaTeX preview:"/>
+            <Typography sx={{fontSize: 20}}>
                 {`$${tex}$`}
             </Typography>
-            <Typography>
+            {/* <Typography>
                 Tree:
             </Typography>
-            <BinaryTree tree={[tree]}/>
+            <BinaryTree tree={[tree]}/> */}
         </Box>
     )
 }

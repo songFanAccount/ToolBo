@@ -1,4 +1,4 @@
-import { Box, useMediaQuery } from "@mui/material"
+import { Box, Typography, useMediaQuery } from "@mui/material"
 import { Outlet, useLocation } from "react-router-dom"
 import { tools } from "../../../data"
 import SideBar from "./SideBar"
@@ -82,9 +82,11 @@ function ToolPageLayout() {
                     top: 130,
                     left: 330,
                     zIndex: 8,
+                    width: 'calc(100vw - 330px)'
                 }}
             >
                 <ToolPagePath urls={pathURLs} displayNames={displayNames}/>
+                <ToolPageSectionTitle title={curToolName}/>
                 <Outlet dimX={dimX}/>
             </Box>
         </>
@@ -92,3 +94,30 @@ function ToolPageLayout() {
 }
 
 export default ToolPageLayout
+
+export function ToolPageSectionTitle({title}) {
+    return (
+        <Typography
+            sx={{
+                fontSize: 30,
+                fontFamily: 'Montserrat',
+                mb: 3
+            }}
+        >
+            {title}
+        </Typography>
+    )
+}
+
+export function ToolPageParagraph({text}) {
+    return (
+        <Typography
+            sx={{
+                mb: 2,
+                fontFamily: 'Verdana'
+            }}
+        >
+            {text}
+        </Typography>
+    )
+}
