@@ -30,7 +30,7 @@ function ToolPageNav() {
                 display: 'flex',
                 flexDirection: 'column',
                 width: 1,
-                backgroundColor: '#c9e8f2',
+                backgroundColor: '#c9e8f2'
             }}
         >
             <Typography

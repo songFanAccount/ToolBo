@@ -2,6 +2,7 @@ import { Box, useMediaQuery } from "@mui/material"
 import { Outlet, useLocation } from "react-router-dom"
 import { tools } from "../../../data"
 import SideBar from "./SideBar"
+import ToolPagePath from "./ToolPagePath"
 
 /*
 THIS MIGHT BREAK IF CATEGORY NAME = TOOL NAME BUT NOT SURE
@@ -55,10 +56,12 @@ function ToolPageLayout() {
     const location = useLocation()
     const pathName = location.pathname
     let curToolName = ''
+    let displayNames = ['Categories']
+    let pathURLs = ['/tools']
     try {
         const toolInfo = getToolInfo(pathName)
-        const displayNames = toolInfo.displayNames
-        const pathURLs = toolInfo.pathURLs
+        displayNames = toolInfo.displayNames
+        pathURLs = toolInfo.pathURLs
         curToolName = displayNames.at(-1)
     } catch(e) {
         console.log(e.message)
@@ -76,14 +79,14 @@ function ToolPageLayout() {
                 sx={{
                     position: 'absolute',
                     overflowX: 'clip',
-                    top: 100,
-                    left: 350,
+                    top: 130,
+                    left: 330,
                     zIndex: 8,
                 }}
             >
+                <ToolPagePath urls={pathURLs} displayNames={displayNames}/>
                 <Outlet dimX={dimX}/>
             </Box>
-            <Outlet/>
         </>
     )
 }
