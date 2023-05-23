@@ -10,7 +10,7 @@ function SideBar({toolName}) {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                width: 300,
+                width: 350,
                 backgroundColor: '#ADD8E6',
                 position: 'fixed',
                 top: 100,

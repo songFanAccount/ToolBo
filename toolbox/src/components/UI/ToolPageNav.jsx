@@ -33,16 +33,6 @@ function ToolPageNav() {
                 backgroundColor: '#c9e8f2'
             }}
         >
-            <Typography
-                sx={{
-                    fontSize: 24,
-                    fontFamily: 'Montserrat',
-                    mt: 1,
-                    ml: 1
-                }}
-            >
-                Core sections:
-            </Typography>
             <List
                 sx={{
                     display: 'flex',

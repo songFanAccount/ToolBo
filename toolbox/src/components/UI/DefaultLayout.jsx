@@ -1,6 +1,7 @@
-import { Box, useMediaQuery } from '@mui/material';
+import { Box, IconButton, Typography, useMediaQuery } from '@mui/material';
 import { Outlet } from 'react-router-dom';
 import Header from './Header/Header';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
 function DefaultLayout() {
     /*
@@ -46,3 +47,45 @@ function DefaultLayout() {
 }
 
 export default DefaultLayout
+
+export function SectionBox(props) {
+    const showBorder = !props.noBorder
+    return (
+        <Box
+            sx={{
+                ml: showBorder ? 1.5 : 0,
+                mb: 3,
+                pl: showBorder ? 2 : 0,
+                py: showBorder ? 1.5 : 0,
+                borderLeft: showBorder ? 2 : 0,
+                borderColor: '#AEAEAE',
+                display: 'flex',
+                flexDirection: 'column',
+                rowGap: 2,
+                width: 'fit-content'
+            }}
+        >
+            {props.children}
+        </Box>
+    )
+}
+export function CopyableParagraph({preText, copyableText, copyable}) {
+    return (
+        <Box
+            sx={{display: 'flex', alignItems: 'center'}}
+        >
+            <Typography
+                sx={{fontFamily: 'Verdana',}}
+            >
+                {preText + copyableText}
+            </Typography>
+            {copyable && 
+                <IconButton onClick={() => navigator.clipboard.writeText(copyableText)}>
+                    <ContentCopyIcon
+                        sx={{fontSize: 20, color: 'black'}}
+                    />
+                </IconButton>
+            }
+        </Box>
+    )
+}

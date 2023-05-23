@@ -20,11 +20,11 @@ const precedence = {
     '-': 2,
     '*': 3,
     '/': 3,
-    '^': 5,
+    '^': 4,
     '(': 0,
     ')': 0,
     'function': 6,
-    '@': 4
+    '@': 5
 }
 const associativity = {
     '+': -1,
@@ -57,6 +57,7 @@ function getTokens(expr) {
     let curType = tokenTypes.none
     let numOpenBrac = 0
     let isUnary = false
+    let causeUnaryPrec = -1
     let needNegate = false
     let decimalMode = false
     for(let i = 0; i < expr.length; i++) {
@@ -106,7 +107,11 @@ function getTokens(expr) {
                 }
                 if(needNegate) {
                     tokens.push({token: '1', type: tokenTypes.number, negate: true})
-                    tokens.push({token: '@', type: tokenTypes.operator})
+                    if(causeUnaryPrec > precedence['*']) {
+                        tokens.push({token: '@', type: tokenTypes.operator})
+                    } else {
+                        tokens.push({token: '*', type: tokenTypes.operator})
+                    }
                     needNegate = false
                 }
                 isUnary = false
@@ -240,6 +245,7 @@ function getTokens(expr) {
                                 curToken = '-'
                             } else {
                                 isUnary = true
+                                causeUnaryPrec = precedence[curToken]
                                 tokens.push({token: curToken, type: curType})
                                 needNegate = true
                             }
@@ -409,7 +415,9 @@ function treeToLatex(tree, msgArray, controlNegate) {
             // Current implementation ensures left will be null
             // Get the Latex string of the function, and wrap the arguments in parenthese
             msgArray[0] += supportedFunctions[curToken.token] + '{'
+            msgArray[0] += '('
             treeToLatex(right, msgArray, false)
+            msgArray[0] += ')'
             msgArray[0] += '}'
             return needNegate
         case tokenTypes.operator:
@@ -468,7 +476,8 @@ function treeToLatex(tree, msgArray, controlNegate) {
                         } else {
                             firstRightNum = msgArray[0][insertIndex] >= '0' && msgArray[0][insertIndex] <= '9'
                         }
-                        if(firstRightNum) { // Start of right expression is a number, add \cdot
+                        let leftIsNegate = left?.value?.negate
+                        if(!leftIsNegate && firstRightNum) { // Start of right expression is a number, add \cdot
                             msgArray[0] = msgArray[0].slice(0, insertIndex) + supportedOperators['*'] + ' ' + msgArray[0].slice(insertIndex)
                         }
                     }
@@ -534,13 +543,18 @@ Should return:
 */
 export function exprToLatex(mathExpr) {
     if(mathExpr === undefined || mathExpr === null) {throw new Error("LatexDisplay needs mathExpr!")}
+    if(mathExpr === '') {
+        return {
+            success: false,
+            errorMsg: 'Empty input!'
+        }
+    }
     let ret
     try {
         const tokens = getTokens(mathExpr)
         const postfixTokens = getTokensInPostfix(tokens)
         console.log(postfixTokens)
         const tree = generateExprTree(postfixTokens)
-        console.log(tree)
         let latexArray = ['']
         treeToLatex(tree, latexArray)
         const latex = latexArray[0]
@@ -554,7 +568,7 @@ export function exprToLatex(mathExpr) {
     } catch (e) {
         ret = {
             success: false,
-            errorMsg: e
+            errorMsg: e.message
         }
     }
         

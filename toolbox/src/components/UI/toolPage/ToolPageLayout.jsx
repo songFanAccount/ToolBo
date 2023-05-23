@@ -80,13 +80,13 @@ function ToolPageLayout() {
                     position: 'absolute',
                     overflowX: 'clip',
                     top: 130,
-                    left: 330,
+                    left: 370,
                     zIndex: 8,
                     width: 'calc(100vw - 330px)'
                 }}
             >
                 <ToolPagePath urls={pathURLs} displayNames={displayNames}/>
-                <ToolPageSectionTitle title={curToolName}/>
+                <ToolPageTitle title={curToolName}/>
                 <Outlet dimX={dimX}/>
             </Box>
         </>
@@ -95,7 +95,7 @@ function ToolPageLayout() {
 
 export default ToolPageLayout
 
-export function ToolPageSectionTitle({title}) {
+export function ToolPageTitle({title}) {
     return (
         <Typography
             sx={{
@@ -109,12 +109,25 @@ export function ToolPageSectionTitle({title}) {
     )
 }
 
-export function ToolPageParagraph({text}) {
+export function ToolPageSectionTitle({title}) {
     return (
         <Typography
             sx={{
-                mb: 2,
-                fontFamily: 'Verdana'
+                fontSize: 24,
+                fontFamily: 'Montserrat',
+            }}
+        >
+            {title}
+        </Typography>
+    )
+}
+
+export function ToolPageParagraph({text, bold}) {
+    return (
+        <Typography
+            sx={{
+                fontFamily: 'Verdana',
+                fontWeight: bold ? 'bold' : 'normal'
             }}
         >
             {text}
