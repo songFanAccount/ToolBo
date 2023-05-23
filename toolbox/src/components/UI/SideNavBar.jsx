@@ -462,8 +462,8 @@ function SideNavBar(props) {
 				p: 1,
 				ml: 2.5,
 				mt: inHeader ? 0 : 3,
-				mb: inHeader ? 0 : 2,
-				borderRadius: 0
+				mb: inHeader ? 0 : 3,
+				borderRadius: 0,
 			}}
 		>
 			<ToolsIcon/>

@@ -1,4 +1,4 @@
-import { Box, IconButton, Typography, useMediaQuery } from '@mui/material';
+import { Box, IconButton, List, ListItemText, Typography, useMediaQuery } from '@mui/material';
 import { Outlet } from 'react-router-dom';
 import Header from './Header/Header';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
@@ -69,6 +69,62 @@ export function SectionBox(props) {
         </Box>
     )
 }
+export function PageTitle({title}) {
+    return (
+        <Typography
+            id="The Tool"
+            sx={{
+                fontSize: 30,
+                fontFamily: 'Montserrat',
+                mb: 3
+            }}
+        >
+            {title}
+        </Typography>
+    )
+}
+
+export function PageSectionTitle({title}) {
+    return (
+        <Typography
+            id={title}
+            sx={{
+                fontSize: 24,
+                fontFamily: 'Montserrat',
+            }}
+        >
+            {title}
+        </Typography>
+    )
+}
+
+export function PageParagraph({text, bold}) {
+    return (
+        <Typography
+            sx={{
+                fontFamily: 'Verdana',
+                fontWeight: bold ? 'bold' : 'normal',
+            }}
+        >
+            {text}
+        </Typography>
+    )
+}
+
+export function PageTextList({list, listName}) {
+    if(!list) {throw new Error("Need input list in PageTextList!")}
+    return (
+        <Box>
+            <PageParagraph text={listName}/>
+            <List sx={{pl: 4, listStyleType: 'square'}}>
+                {list.map((e) => (
+                    <ListItemText primaryTypographyProps={{fontFamily: 'Verdana'}} sx={{display: 'list-item'}}>{e}</ListItemText>
+                ))}
+            </List>
+        </Box>
+        
+    )
+}
 export function CopyableParagraph({preText, copyableText, copyable}) {
     return (
         <Box
@@ -80,7 +136,7 @@ export function CopyableParagraph({preText, copyableText, copyable}) {
                 {preText + copyableText}
             </Typography>
             {copyable && 
-                <IconButton onClick={() => navigator.clipboard.writeText(copyableText)}>
+                <IconButton sx={{ml: .5}} onClick={() => navigator.clipboard.writeText(copyableText)}>
                     <ContentCopyIcon
                         sx={{fontSize: 20, color: 'black'}}
                     />
@@ -88,4 +144,10 @@ export function CopyableParagraph({preText, copyableText, copyable}) {
             }
         </Box>
     )
+}
+
+export function scrollWithOffset(el) {
+    const yCoordinate = el.getBoundingClientRect().top + window.pageYOffset;
+    const yOffset = -100; 
+    window.scrollTo({ top: yCoordinate + yOffset, behavior: 'smooth' }); 
 }

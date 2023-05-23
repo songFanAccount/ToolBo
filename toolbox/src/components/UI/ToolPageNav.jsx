@@ -1,12 +1,18 @@
 import { Box, List, ListItem, Typography } from "@mui/material"
-import { Link } from "react-router-dom"
+import { HashLink } from 'react-router-hash-link';
+import { Link } from '@mui/material';
+import { scrollWithOffset } from "./DefaultLayout";
 
-function ToolPageNav() {
+function ToolPageNav({sections}) {
+    if(!sections || sections.length === 0) {throw new Error("ToolPageNav: Not provided sections array!")}
     const ListLink = ({text}) => {
+        if(text === 'The Tool') {text = 'top'}
         return (
-            <ListItem
-                component={Link}
-                to="/about"
+            <Link
+                component={HashLink}
+                smooth to={`#${text}`}
+                scroll={e => scrollWithOffset(e)}
+                underline="hover"
                 sx={{
                     display: 'list-item',
                     width: 'fit-content',
@@ -15,13 +21,10 @@ function ToolPageNav() {
                     fontFamily: 'Ubuntu',
                     pt: 0.6,
                     px: 0,
-                    '&:hover': {
-                        textDecoration: 'underline'
-                    }
                 }}
             >
                 {text}
-            </ListItem>
+            </Link>
         )
     }
     return (
@@ -41,11 +44,7 @@ function ToolPageNav() {
                     pl: 4,
                 }}
             >
-                <ListLink text="The Tool"/>
-                <ListLink text="How to use"/>
-                <ListLink text="Notes and advice"/>
-                <ListLink text="How it works"/>
-                <ListLink text="Why it works"/>
+                {sections.map((e) => (<ListLink text={e}/>))}
             </List>
         </Box>
     )

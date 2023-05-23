@@ -3,7 +3,7 @@ import CollaboratorInfo from "../CollaboratorInfo"
 import SideNavBar from "../SideNavBar"
 import ToolPageNav from "../ToolPageNav"
 
-function SideBar({toolName}) {
+function SideBar({toolName, sections}) {
     return (
         <Box
             sx={{
@@ -50,14 +50,14 @@ function SideBar({toolName}) {
                         {toolName}
                     </Typography>
                 </Box>
-                <ToolPageNav/>
+                <ToolPageNav sections={sections}/>
             </Box>
             <Box
                 sx={{
                     width: 0.9,
-                    borderTop: 2.5,
+                    borderTop: 2,
                     mb: 2,
-                    mt: 'auto'
+                    mt: 'auto',
                 }}
             />
             <CollaboratorInfo/>

@@ -15,7 +15,8 @@ function Header(props) {
         overflowX: 'clip',
         top: 0,
         width: 1,
-        height: 100
+        height: 100,
+        zIndex: 200
     }
     let titleStyle = {
         color: '#fdfffc',

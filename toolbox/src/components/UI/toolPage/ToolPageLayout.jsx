@@ -1,6 +1,7 @@
 import { Box, Typography, useMediaQuery } from "@mui/material"
 import { Outlet, useLocation } from "react-router-dom"
 import { tools } from "../../../data"
+import { PageTitle } from "../DefaultLayout"
 import SideBar from "./SideBar"
 import ToolPagePath from "./ToolPagePath"
 
@@ -67,70 +68,20 @@ function ToolPageLayout() {
         console.log(e.message)
     }
     return(
-        <>
-            <Box
-                sx={{
-                    width: 350,
-                }}
-            >
-                {dimX > 0 && <SideBar toolName={curToolName}/>}
-            </Box>
-            <Box className="pageContent"
-                sx={{
-                    position: 'absolute',
-                    overflowX: 'clip',
-                    top: 130,
-                    left: 370,
-                    zIndex: 8,
-                    width: 'calc(100vw - 330px)'
-                }}
-            >
+        <Box className="pageContent"
+            sx={{
+                position: 'absolute',
+                overflowX: 'clip',
+                top: 130,
+            }}
+        >
+            <Box sx={{position: 'relative', left: 370}}>
                 <ToolPagePath urls={pathURLs} displayNames={displayNames}/>
-                <ToolPageTitle title={curToolName}/>
-                <Outlet dimX={dimX}/>
+                <PageTitle title={curToolName}/>
             </Box>
-        </>
+            <Outlet context={{dimX: dimX}}/>
+        </Box>
     )
 }
 
 export default ToolPageLayout
-
-export function ToolPageTitle({title}) {
-    return (
-        <Typography
-            sx={{
-                fontSize: 30,
-                fontFamily: 'Montserrat',
-                mb: 3
-            }}
-        >
-            {title}
-        </Typography>
-    )
-}
-
-export function ToolPageSectionTitle({title}) {
-    return (
-        <Typography
-            sx={{
-                fontSize: 24,
-                fontFamily: 'Montserrat',
-            }}
-        >
-            {title}
-        </Typography>
-    )
-}
-
-export function ToolPageParagraph({text, bold}) {
-    return (
-        <Typography
-            sx={{
-                fontFamily: 'Verdana',
-                fontWeight: bold ? 'bold' : 'normal'
-            }}
-        >
-            {text}
-        </Typography>
-    )
-}
