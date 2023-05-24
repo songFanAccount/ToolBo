@@ -270,7 +270,7 @@ function SideNavBar(props) {
 										<Typography
 											sx={listItemTextStyle}
 										>
-											{entry[1]}
+											{entry[1].displayName}
 										</Typography>
 									}
 								/>

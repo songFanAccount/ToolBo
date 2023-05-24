@@ -1,5 +1,5 @@
 import { Box, IconButton, Link, List, ListItemText, Typography, useMediaQuery } from '@mui/material';
-import { Outlet } from 'react-router-dom';
+import { Outlet, Link as RouterLink } from 'react-router-dom';
 import Header from './Header/Header';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
@@ -126,6 +126,16 @@ export function PageTextList({list, listName}) {
         
     )
 }
+
+export function PageEndSpace() {
+    return (
+        <Box
+            sx={{
+                height: 50
+            }}
+        />
+    )
+}
 export function CopyableParagraph({preText, copyableText, copyable}) {
     return (
         <Box
@@ -157,6 +167,31 @@ export function ExternalLink({href, target, children}) {
             }}
         >
             {children}
+        </Link>
+    )
+}
+
+/*
+Remember to update this every time a new tool is done.
+*/
+const toolnameToPath = {
+    'latex converter': '/tools/maths/latex-converter',
+    'maths expression parser': '/tools/compsci/parsing/maths-expression-parser'
+}
+export function ToolLink({name, linkText}) {
+    const toolPath = toolnameToPath[name]
+    if(!toolPath) {throw new Error("No matching tool path for given name!")}
+    return (
+        <Link
+            component={RouterLink}
+            to={toolPath}
+            sx={{
+                fontFamily: 'Verdana',
+                color:'#011627',
+                textDecorationColor: '#011627'
+            }}
+        >
+            {linkText}
         </Link>
     )
 }

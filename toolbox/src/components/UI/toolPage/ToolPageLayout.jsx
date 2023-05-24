@@ -11,10 +11,10 @@ THIS MIGHT BREAK IF CATEGORY NAME = TOOL NAME BUT NOT SURE
 function getToolInfo(curPath) {
     if(curPath.startsWith('/tools')) {
         let cat = tools
-        //let cats = []
         let names = ['Categories']
         let path = '/tools'
         let urls = ['/tools']
+        let sectionTitles = null
         const routes = curPath.split('/')
         for(let i = 2; i < routes.length; i++) {
             const newCat = cat.subCategories?.[routes[i]]
@@ -27,16 +27,19 @@ function getToolInfo(curPath) {
             } else { // Not subcategory, check if it is a tool
                 const tool = cat.tools?.[routes[i]]
                 if(tool) {
-                    names.push(tool)
+                    names.push(tool.displayName)
                     path += `/${routes[i]}`
                     urls.push(path)
+                    sectionTitles = tool.sectionTitles
                 }
                 break
             }
         }
+        if(!sectionTitles) {throw new Error("Section titles shouldn't be null!")}
         const ret = {
             displayNames: names,
-            pathURLs: urls
+            pathURLs: urls,
+            sectionTitles: sectionTitles
         }
         return ret
     } else {
@@ -59,11 +62,13 @@ function ToolPageLayout() {
     let curToolName = ''
     let displayNames = ['Categories']
     let pathURLs = ['/tools']
+    let sectionTitles
     try {
         const toolInfo = getToolInfo(pathName)
         displayNames = toolInfo.displayNames
         pathURLs = toolInfo.pathURLs
         curToolName = displayNames.at(-1)
+        sectionTitles = toolInfo.sectionTitles
     } catch(e) {
         console.log(e.message)
     }
@@ -73,13 +78,18 @@ function ToolPageLayout() {
                 position: 'absolute',
                 overflowX: 'clip',
                 top: 130,
+                width: 'calc(100vw - 370px)',
             }}
         >
-            <Box sx={{position: 'relative', left: 370}}>
+            <Box sx={{zIndex: 7,
+                    position: 'relative',
+                    left: 370,
+                    width: 'calc(100vw - 2*370px)',}}>
                 <ToolPagePath urls={pathURLs} displayNames={displayNames}/>
                 <PageTitle title={curToolName}/>
+                <Outlet />
             </Box>
-            <Outlet context={{dimX: dimX}}/>
+            {dimX > 0 && <SideBar toolName={curToolName} sections={sectionTitles}/>}
         </Box>
     )
 }

@@ -1,7 +1,10 @@
-export const mathsTools = {
+const mathsTools = {
     displayName: 'Maths',
     tools: {
-        'latex-converter': 'LaTeX Converter'
+        'latex-converter': {
+            displayName: 'LaTeX Converter',
+            sectionTitles: ['The Tool', 'How to use', 'Limitations', 'How it works']
+        }
     },
     subCategories: {
         differentiation: {
@@ -12,10 +15,7 @@ export const mathsTools = {
             subCategories:  {
                 estimation: {
                     displayName: 'Estimation techniques',
-                    tools: {
-                        'trapezoidal-rule': 'Trapezoidal rule',
-                        'simpsons-rule': "Simpson's rule"
-                    },
+                    tools: null,
                     subCategories: {
                         TEMPORARY: {
                             displayName: 'Temporary',
@@ -29,7 +29,7 @@ export const mathsTools = {
     }
 }
 
-export const chemistryTools = {
+const chemistryTools = {
     displayName: 'Chemistry',
     tools: null,
     subCategories: {
@@ -46,7 +46,7 @@ export const chemistryTools = {
         }
     }
 }
-export const physicsTools = {
+const physicsTools = {
     displayName: 'Physics',
     tools: null,
     subCategories: {
@@ -64,7 +64,7 @@ export const physicsTools = {
     }
 }
 
-export const engineeringTools = {
+const engineeringTools = {
     displayName: 'Engineering',
     tools: null,
     subCategories: {
@@ -82,7 +82,7 @@ export const engineeringTools = {
     }
 }
 
-export const irlGamesTools = {
+const irlGamesTools = {
     displayName: 'IRL Games',
     tools: null,
     subCategories: {
@@ -100,7 +100,7 @@ export const irlGamesTools = {
     }
 }
 
-export const videoGamesTools = {
+const videoGamesTools = {
     displayName: 'Video Games',
     tools: null,
     subCategories: {
@@ -118,11 +118,28 @@ export const videoGamesTools = {
     }
 }
 
+const compsciTools = {
+    displayName: "Computer Science",
+    tools: null,
+    subCategories: {
+        parsing: {
+            displayName: 'Parsing',
+            tools: {
+                'maths-expression-parser': {
+                    displayName: 'Maths expression parser',
+                    sectionTitles: ['The Tool', 'How to use', 'Limitations', 'How it works']
+                }
+            },
+            subCategories: null
+        }
+    }
+}
 export const tools = {
     subCategories: {
         maths: mathsTools,
         chemistry: chemistryTools,
         physics: physicsTools,
+        compsci: compsciTools,
         engineering: engineeringTools,
         irlGames: irlGamesTools,
         videoGames: videoGamesTools

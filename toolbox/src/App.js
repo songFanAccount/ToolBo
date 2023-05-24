@@ -12,6 +12,9 @@ import StationaryPoints from './pages/tools/maths/differentiation/StationaryPoin
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import LatexConverter from './pages/tools/maths/LatexConverter';
 import ToolPageLayout from './components/UI/toolPage/ToolPageLayout';
+import Compsci from './pages/tools/compsci/Compsci';
+import Parsing from './pages/tools/compsci/parsing/Parsing';
+import MathsExpressionParser from './pages/tools/compsci/parsing/MathsExpressionParser';
 function App() {
 	return (
     	<BrowserRouter>
@@ -29,6 +32,13 @@ function App() {
 							<Route path="differentiation">
 								<Route index element={<Differentiation/>}/>
 								<Route path="stationary-points" element={<StationaryPoints/>}/>
+							</Route>
+						</Route>
+						<Route path="compsci">
+							<Route index element={<Compsci/>}/>
+							<Route path="parsing">
+								<Route index element={<Parsing/>}/>
+								<Route path="maths-expression-parser" element={<MathsExpressionParser/>}/>
 							</Route>
 						</Route>
 					</Route>
