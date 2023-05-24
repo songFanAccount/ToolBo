@@ -1,9 +1,9 @@
-import { Box, TextField, Typography } from '@mui/material';
+import { Box, Link, TextField, Typography } from '@mui/material';
 import React from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { BinaryTree } from '../../../components/BinaryTree';
 import { exprToLatex } from '../../../components/Maths/LatexDisplay';
-import { CopyableParagraph, PageParagraph, PageSectionTitle, PageTextList, SectionBox } from '../../../components/UI/DefaultLayout';
+import { CopyableParagraph, ExternalLink, PageParagraph, PageSectionTitle, PageTextList, SectionBox } from '../../../components/UI/DefaultLayout';
 import SideBar from '../../../components/UI/toolPage/SideBar';
 
 /*
@@ -16,7 +16,7 @@ function LatexConverter() {
     const [delay, setDelay] = React.useState(1000)
     const [errorMsg, setErrorMsg] = React.useState('')
     const [latexRendered, setLatexRendered] = React.useState('-')
-    const sectionTitles = ['The Tool', 'How to use', 'Limitations', 'Notes and advice', 'How it works', 'Why it works']
+    const sectionTitles = ['The Tool', 'How to use', 'Limitations', 'How it works', 'Why it works']
     const context = useOutletContext()
     const dimX = context.dimX
 
@@ -114,6 +114,18 @@ function LatexConverter() {
                         ]}
                     />
                 </SectionBox>
+                <PageSectionTitle title="How it works"/>
+                <SectionBox>
+                    <Box>
+                        <PageParagraph text={`The LaTeX convertion involves the use of the `} inline={true}/>
+                        <ExternalLink target="_blank" 
+                            href="https://en.wikipedia.org/wiki/Shunting_yard_algorithm#:~:text=In%20computer%20science%2C%20the%20shunting,abstract%20syntax%20tree%20(AST).">
+                            Shunting yard algorithm
+                        </ExternalLink>
+                    </Box>
+                    
+                </SectionBox>
+                <PageSectionTitle title="Why it works"/>
                 {/* <Typography>
                     Tree:
                 </Typography>

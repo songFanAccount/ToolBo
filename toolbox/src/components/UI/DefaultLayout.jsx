@@ -1,4 +1,4 @@
-import { Box, IconButton, List, ListItemText, Typography, useMediaQuery } from '@mui/material';
+import { Box, IconButton, Link, List, ListItemText, Typography, useMediaQuery } from '@mui/material';
 import { Outlet } from 'react-router-dom';
 import Header from './Header/Header';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
@@ -98,12 +98,13 @@ export function PageSectionTitle({title}) {
     )
 }
 
-export function PageParagraph({text, bold}) {
+export function PageParagraph({text, bold, inline}) {
     return (
-        <Typography
+        <Typography display={inline ? 'inline' : 'block'}
             sx={{
                 fontFamily: 'Verdana',
                 fontWeight: bold ? 'bold' : 'normal',
+                
             }}
         >
             {text}
@@ -146,6 +147,19 @@ export function CopyableParagraph({preText, copyableText, copyable}) {
     )
 }
 
+export function ExternalLink({href, target, children}) {
+    return (
+        <Link href={href} target={target}
+            sx={{
+                fontFamily: 'Verdana',
+                color:'#011627',
+                textDecorationColor: '#011627'
+            }}
+        >
+            {children}
+        </Link>
+    )
+}
 export function scrollWithOffset(el) {
     const yCoordinate = el.getBoundingClientRect().top + window.pageYOffset;
     const yOffset = -100; 

@@ -6,11 +6,11 @@ import { scrollWithOffset } from "./DefaultLayout";
 function ToolPageNav({sections}) {
     if(!sections || sections.length === 0) {throw new Error("ToolPageNav: Not provided sections array!")}
     const ListLink = ({text}) => {
-        if(text === 'The Tool') {text = 'top'}
+        let link = text === "The Tool" ? "top" : text
         return (
             <Link
                 component={HashLink}
-                smooth to={`#${text}`}
+                smooth to={`#${link}`}
                 scroll={e => scrollWithOffset(e)}
                 underline="hover"
                 sx={{
